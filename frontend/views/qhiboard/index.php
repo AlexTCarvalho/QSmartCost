@@ -14,6 +14,7 @@ $this->title = 'QHI Board';
 $script = <<< JS
 
   $(document).ready(function(){
+    window.location.href='#weekly-table';
         var j = 0;
         var ly = [];
         var py = [];
@@ -224,13 +225,13 @@ $this->registerJs($script, $position);
       <button id = "showmonth" style="width:200">Tabela Mensal</button>
     <!-- TABELA SEMANAL -->
      <div id = "table">
-     <table id="weekly-table" style="height: 400px"class="table table-striped table-bordered table-condensed table-hover">
+     <table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-bordered table-condensed table-hover">
      <thead>
       <tr style="text-align: center;">
        <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
-       <th style="vertical-align: middle; text-align: center;" rowspan="2" >DEC'17 <br> Performance</th>
-       <th style="vertical-align: middle; text-align: center;" rowspan="2" >DEC'18 <br> Objective</th>
-       <th style="vertical-align: middle; text-align: center;" colspan="7" >DEC'18 Performance</th>
+       <th style="vertical-align: middle; text-align: center;" rowspan="2" >DEC'17 <br> Result</th>
+       <th style="vertical-align: middle; text-align: center;" rowspan="2" >DEC'18 <br> Target</th>
+       <th style="vertical-align: middle; text-align: center;" colspan="7" >DEC'18 Result</th>
        <th style="vertical-align: middle; text-align: center;" rowspan="2" >Score</th>
        <th style="vertical-align: middle; text-align: center;" rowspan="2" >Accomplishment</th>
        <th style="vertical-align: middle; text-align: center;" rowspan="2" >Pattern (Padrão)</th>
@@ -238,7 +239,7 @@ $this->registerJs($script, $position);
       <tr style="text-align: center; vertical-align: middle;">
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W48</td>
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W49</td>
-       <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W50</td>
+       <td style="vertical-align: middle; text-align: centerlt;"width="70px"> <b>W50</td>
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W51</td>
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W52</td>
        <td style="vertical-align: middle; text-align: center;"> <b>Accumulate </td>
@@ -273,7 +274,7 @@ $this->registerJs($script, $position);
        <td class="impr" style="vertical-align:center;"></td>
       </tr>
       <tr  bgColor="#e0e0e0" style="text-align: center;">
-       <td bgColor="#e0e0e0">Percentage </td> <!-- ((up/down)*100) -->
+       <td bgColor="#e0e0e0">Rate </td> <!-- ((up/down)*100) -->
        <td bgColor="#e0e0e0" class="lp"><b>1.97</td>
        <td bgColor="#e0e0e0" class="ao"><b>1.90</td>
        <td bgColor="#e0e0e0" class="week" >1.36</td>
@@ -313,7 +314,7 @@ $this->registerJs($script, $position);
        <td class="impr" style="color: red; vertical-align:middle"> 298%  </td>
       </tr>
       <tr bgcolor="#e0e0e0" style="text-align: center;">
-       <td >Percentage </td> <!-- ((up/down)*100) -->
+       <td >Rate </td> <!-- ((up/down)*100) -->
        <td class="lp"><b>0.44</td>
        <td class="ao"><b>0.44</td>
        <td class="week">5.53</td>
@@ -354,7 +355,7 @@ $this->registerJs($script, $position);
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
       </tr>
       <tr style="text-align: center;" bgColor="#e0e0e0">
-       <td bgColor="#e0e0e0" >Parts per million </td>
+       <td bgColor="#e0e0e0" >PPM </td>
        <td bgColor="#e0e0e0" class="lp"><b>766</td>
        <td bgColor="#e0e0e0" class="ao"><b>454</td>
        <td bgColor="#e0e0e0" class="week">1036</td>
@@ -375,8 +376,8 @@ $this->registerJs($script, $position);
        <td class="ao"><b></td>
        <td class="week">11</td>
        <td class="week">7</td>
-       <td class="week">25</td>
-       <td class="week">19</td>
+       <td class="week">10</td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">62</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
@@ -385,22 +386,22 @@ $this->registerJs($script, $position);
        <td>Total production quantity</td>
        <td class="lp"><b>35034</td>
        <td class="ao"><b></td>
-       <td class="week">2115</td>
-       <td class="week">4738</td>
-       <td class="week">9854</td>
-       <td class="week">7922</td>
+       <td class="week">10005</td>
+       <td class="week">7456</td>
+       <td class="week">1862</td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">24629</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
       </tr>
       <tr style="text-align: center;" bgColor="#e0e0e0">
-        <td>Parts per million</td> <!-- (1 - 18'/17')*100 -->
+        <td>PPM</td> <!-- (1 - 18'/17')*100 -->
        <td class="lp"><b>3729</td>
        <td class="ao"><b>4200</td>
        <td class="week">5201</td>
        <td class="week">1477</td>
        <td class="week">2537</td>
-       <td class="week">2398</td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">24629</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
@@ -411,7 +412,7 @@ $this->registerJs($script, $position);
       <tr style="text-align: center">
       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
       <td>Rework quantity</td>
-       <td class="lp"><b>35054</td>
+       <td class="lp"><b>35</td>
        <td class="ao"><b></td>
        <td class="week">0</td>
        <td class="week">0</td>
@@ -423,18 +424,18 @@ $this->registerJs($script, $position);
       </tr>
       <tr style="text-align: center;">
         <td>Total production quantity</td>
-       <td class="lp"><b>5000000</td>
+       <td class="lp"><b>214023</td>
        <td class="ao"><b></td>
-       <td class="week">1000452</td>
-       <td class="week">2621485</td>
-       <td class="week">1717852</td>
-       <td class="week">1155000</td>
+       <td class="week">10005</td>
+       <td class="week">7456</td>
+       <td class="week">1862</td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">31</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
       </tr>
       <tr bgColor="#e0e0e0" style="text-align: center;">
-        <td bgColor="#e0e0e0">Parts per million</td>
+        <td bgColor="#e0e0e0">PPM</td>
         <td bgColor="#e0e0e0"class="lp"><b>0</td>
         <td bgColor="#e0e0e0" class="ao"><b></td>
         <td bgColor="#e0e0e0"class="week">0</td>

@@ -190,7 +190,7 @@ $html = '
        <th style="vertical-align: middle; text-align: center;" colspan="7" >DEC\'18 Result</th>
        <th style="vertical-align: middle; text-align: center;" rowspan="2" >Score</th>
        <th style="vertical-align: middle; text-align: center;" rowspan="2" >Accomplishment</th>
-       <th style="vertical-align: middle; text-align: center;" rowspan="2" >Pattern (Padrão)</th>
+       <th style="vertical-align: middle; text-align: center;" rowspan="2" >Pattern</th>
       </tr>
       <tr style="text-align: center; vertical-align: middle;">
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W48</td>
@@ -198,8 +198,8 @@ $html = '
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W50</td>
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W51</td>
        <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W52</td>
-       <td style="vertical-align: middle; text-align: center;"> <b>Accumulate </td>
-       <td style="vertical-align: middle; text-align: center;"width="100px"> <b>Improvement rate</td> <!--  ((17\' - 18\')/17\')*100-->
+       <td style="vertical-align: middle; text-align: center;"> <b>Acc.</td>
+       <td style="vertical-align: middle; text-align: center;"width="100px"> <b>YOY</td> <!--  ((17\' - 18\')/17\')*100-->
       </tr>
      </thead>
      <tbody>
@@ -212,7 +212,7 @@ $html = '
        <td class="week">2191 </td>
        <td class="week">2229 </td>
        <td class="week">2280 </td>
-       <td class="week">2352 </td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">0 </td>
        <td class="impr" style="color: green; vertical-align:middle">x% </td>
@@ -224,19 +224,19 @@ $html = '
        <td class="week">160874  </td>
        <td class="week">160888  </td>
        <td class="week">161305  </td>
-       <td class="week">161409  </td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">0</td>
        <td class="impr" style="vertical-align:center;"></td>
       </tr>
       <tr  bgColor="#e0e0e0" style="text-align: center;">
-       <td bgColor="#e0e0e0">Percentage </td> <!-- ((up/down)*100) -->
+       <td bgColor="#e0e0e0">Rate </td> <!-- ((up/down)*100) -->
        <td bgColor="#e0e0e0" class="lp"><b>1.97</td>
        <td bgColor="#e0e0e0" class="ao"><b>1.90</td>
        <td bgColor="#e0e0e0" class="week" >1.36</td>
        <td bgColor="#e0e0e0" class="week" >1.39</td>
        <td bgColor="#e0e0e0" class="week" >1.41</td>
-       <td bgColor="#e0e0e0" class="week" >1.46</td>
+       <td bgColor="#e0e0e0" class="week" ></td>
        <td bgColor="#e0e0e0" class="week" ></td>
        <td bgColor="#e0e0e0" class="ap">0</td>
        <td bgColor="#e0e0e0" class="impr" style="color: green; vertical-align:middle"> x%  </td>
@@ -252,7 +252,7 @@ $html = '
        <td class="week">13.0</td>
        <td class="week">14.6</td>
        <td class="week">14.0</td>
-       <td class="week">10.3</td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">51.9</td>
        <td class="impr" style="color: green; vertical-align:middle"> x%  </td>
@@ -264,19 +264,19 @@ $html = '
        <td class="week">235.2</td><!-- 235.2 -->
        <td class="week">1437.0</td><!--    1437.0  -->
        <td class="week">408.0</td><!-- 408.0-->
-       <td class="week">900.1</td><!-- 900.1-->
+       <td class="week"></td><!-- 900.1-->
        <td class="week"></td>
        <td class="ap">2980.3</td>
        <td class="impr" style="color: red; vertical-align:middle"> 298%  </td>
       </tr>
       <tr bgcolor="#e0e0e0" style="text-align: center;">
-       <td >Percentage </td> <!-- ((up/down)*100) -->
+       <td >Rate </td> <!-- ((up/down)*100) -->
        <td class="lp"><b>0.44</td>
        <td class="ao"><b>0.44</td>
        <td class="week">5.53</td>
        <td class="week">1.02</td>
        <td class="week">3.43</td>
-       <td class="week">1.14</td>
+       <td class="week"></td>
        <td class="week"></td>
        <td class="ap">1.74</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
@@ -288,11 +288,11 @@ $html = '
        <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
        <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
        <td>Poor parts quantity</td>
-       <td class="lp"><b>54</td>
+       <td class="lp"><b>52</td>
        <td class="ao"><b></td>
        <td class="week">24</td>
        <td class="week">12</td>
-       <td class="week">1</td>
+       <td class="week">3</td>
        <td class="week"></td>
        <td class="week"></td>
        <td class="ap">31</td>
@@ -300,19 +300,19 @@ $html = '
       </tr>
       <tr style="text-align: center;">
        <td>Production quantity</td>
-       <td class="lp"><b>70511</td>
+       <td class="lp"><b>62688</td>
        <td class="ao"><b></td>
        <td class="week">23164</td>
        <td class="week">14606</td>
-       <td class="week">2688</td>
+       <td class="week">10557</td>
        <td class="week"></td>
        <td class="week"></td>
        <td class="ap">40174</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
       </tr>
       <tr style="text-align: center;" bgColor="#e0e0e0">
-       <td bgColor="#e0e0e0" >Parts per million </td>
-       <td bgColor="#e0e0e0" class="lp"><b>766</td>
+       <td bgColor="#e0e0e0" >PPM </td>
+       <td bgColor="#e0e0e0" class="lp"><b>830</td>
        <td bgColor="#e0e0e0" class="ao"><b>454</td>
        <td bgColor="#e0e0e0" class="week">1036</td>
        <td bgColor="#e0e0e0" class="week">821</td>
@@ -321,7 +321,7 @@ $html = '
        <td bgColor="#e0e0e0" class="week"></td>
        <td bgColor="#e0e0e0" class="ap">772</td>
        <td bgColor="#e0e0e0" class="impr" style="color: red; vertical-align:middle"> x%  </td>
-       <td bgColor="#e0e0e0" class="pts">3</td>
+       <td bgColor="#e0e0e0" class="pts">15</td>
        <td bgColor="#e0e0e0" class="prctg">0%</td>
        <td bgColor="#e0e0e0" class="patt">15</td>
       </tr>
@@ -332,7 +332,7 @@ $html = '
        <td class="ao"><b></td>
        <td class="week">11</td>
        <td class="week">7</td>
-       <td class="week">10</td>
+       <td class="week">21</td>
        <td class="week"></td>
        <td class="week"></td>
        <td class="ap">62</td>
@@ -340,18 +340,18 @@ $html = '
       </tr>
       <tr style="text-align: center;">
        <td>Total production quantity</td>
-       <td class="lp"><b>35034</td>
+       <td class="lp"><b>31688</td>
        <td class="ao"><b></td>
        <td class="week">10005</td>
        <td class="week">7456</td>
-       <td class="week">1862</td>
+       <td class="week">4296</td>
        <td class="week"></td>
        <td class="week"></td>
        <td class="ap">24629</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
       </tr>
       <tr style="text-align: center;" bgColor="#e0e0e0">
-        <td>Parts per million</td> <!-- (1 - 18\'/17\')*100 -->
+        <td>PPM</td> <!-- (1 - 18\'/17\')*100 -->
        <td class="lp"><b>3729</td>
        <td class="ao"><b>4200</td>
        <td class="week">5201</td>
@@ -368,7 +368,7 @@ $html = '
       <tr style="text-align: center">
       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
       <td>Rework quantity</td>
-       <td class="lp"><b>35</td>
+       <td class="lp"><b>0</td>
        <td class="ao"><b></td>
        <td class="week">0</td>
        <td class="week">0</td>
@@ -380,18 +380,18 @@ $html = '
       </tr>
       <tr style="text-align: center;">
         <td>Total production quantity</td>
-       <td class="lp"><b>214023</td>
+       <td class="lp"><b>31688</td>
        <td class="ao"><b></td>
        <td class="week">10005</td>
        <td class="week">7456</td>
-       <td class="week">1862</td>
+       <td class="week">4296</td>
        <td class="week"></td>
        <td class="week"></td>
        <td class="ap">31</td>
        <td class="impr" style="color: green; vertical-align:middle"> x% </td>
       </tr>
       <tr bgColor="#e0e0e0" style="text-align: center;">
-        <td bgColor="#e0e0e0">Parts per million</td>
+        <td bgColor="#e0e0e0">PPM</td>
         <td bgColor="#e0e0e0"class="lp"><b>0</td>
         <td bgColor="#e0e0e0" class="ao"><b></td>
         <td bgColor="#e0e0e0"class="week">0</td>

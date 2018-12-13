@@ -75,237 +75,237 @@ $html = '
      </thead>
      <tbody>
       <tr style="text-align: center;">
-       <td rowspan="6" style="text-align: center; vertical-align: middle">Market</td>
-       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Field Rate">FFR </td>
+       <td rowspan="6" style="text-align: center; vertical-align: middle" bgColor="#e0e0e0" >Market</td>
+       <td rowspan="3" style="text-align: center; vertical-align: middle" bgColor="#e0e0e0" title="Failure Field Rate">FFR </td>
        <td>\'17</td>
-       <td class="ly"><b>2.62</td> <!-- ly = last year-->
-       <td class="ly"><b>2.31</td>
-       <td class="ly"><b>2.18</td>
-       <td class="ly"><b>2.29</td>
-       <td class="ly"><b>2.48</td>
-       <td class="ly"><b>2.42</td>
-       <td class="ly"><b>2.23</td>
-       <td class="ly"><b>2.12</td>
-       <td class="ly"><b>2.07</td>
-       <td class="ly"><b>1.97</td>
-       <td class="ly"><b>1.80</td>
-       <td class="ly"><b>1.72</td>
+       <td class="ly">2.62</td> <!-- ly = last year-->
+       <td class="ly">2.31</td>
+       <td class="ly">2.18</td>
+       <td class="ly">2.29</td>
+       <td class="ly">2.48</td>
+       <td class="ly">2.42</td>
+       <td class="ly">2.23</td>
+       <td class="ly">2.12</td>
+       <td class="ly">2.07</td>
+       <td class="ly">1.97</td>
+       <td class="ly">1.80</td>
+       <td class="ly">1.72</td>
       </tr>
       <tr style="text-align: center;">
        <td>\'18</td>
-       <td class="py"><b>1.67</td> <!-- py = present year-->
-       <td class="py"><b>1.56</td>
-       <td class="py"><b>1.50</td>
-       <td class="py"><b>1.52</td>
-       <td class="py"><b>1.48</td>
-       <td class="py"><b>1.47</td>
-       <td class="py"><b>1.48</td>
-       <td class="py"><b>1.44</td>
-       <td class="py"><b>1.44</td>
-       <td class="py"><b>1.39</td>
-       <td class="py"><b></td>
-       <td class="py"><b></td>
+       <td class="py">1.67</td> <!-- py = present year-->
+       <td class="py">1.56</td>
+       <td class="py">1.50</td>
+       <td class="py">1.52</td>
+       <td class="py">1.48</td>
+       <td class="py">1.47</td>
+       <td class="py">1.48</td>
+       <td class="py">1.44</td>
+       <td class="py">1.44</td>
+       <td class="py">1.39</td>
+       <td class="py"></td>
+       <td class="py"></td>
       </tr>
-      <tr style="text-align: center;">
-       <td>Improvement</td> <!-- ((17\' - 18\')/17\')*100 -->
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
+      <tr style="text-align: center;" bgColor="#e0e0e0" >
+       <td bgColor="#e0e0e0" >YOY</td> <!-- ((17\' - 18\')/17\')*100 -->
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
         
       </tr>
       <tr style="text-align: center;" >
-       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Cost Rate">FCR </td>
+       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Cost Rate">FCR </td>
        <td>\'17</td>
-       <td class="ly"><b>1.01</td>
-       <td class="ly"><b>1.22</td>
-       <td class="ly"><b>1.45</td>
-       <td class="ly"><b>1.56</td>
-       <td class="ly"><b>1.60</td>
-       <td class="ly"><b>1.57</td>
-       <td class="ly"><b>1.49</td>
-       <td class="ly"><b>1.40</td>
-       <td class="ly"><b>1.28</td>
-       <td class="ly"><b>1.14</td>
-       <td class="ly"><b>1.06</td>
-       <td class="ly"><b>1.04</td>
+       <td class="ly">1.01</td>
+       <td class="ly">1.22</td>
+       <td class="ly">1.45</td>
+       <td class="ly">1.56</td>
+       <td class="ly">1.60</td>
+       <td class="ly">1.57</td>
+       <td class="ly">1.49</td>
+       <td class="ly">1.40</td>
+       <td class="ly">1.28</td>
+       <td class="ly">1.14</td>
+       <td class="ly">1.06</td>
+       <td class="ly">1.04</td>
       </tr>
       <tr style="text-align: center;">
        <td>\'18</td>
-       <td class="py"><b>0.76</td>
-       <td class="py"><b>0.87</td>
-       <td class="py"><b>0.95</td>
-       <td class="py"><b>1.21</td>
-       <td class="py"><b>1.33</td>
-       <td class="py"><b>1.24</td>
-       <td class="py"><b>1.18</td>
-       <td class="py"><b>1.13</td>
-       <td class="py"><b>1.09</td>
-       <td class="py"><b>1.05</td>
-       <td class="py"><b></td>
-       <td class="py"><b></td>
+       <td class="py">0.76</td>
+       <td class="py">0.87</td>
+       <td class="py">0.95</td>
+       <td class="py">1.21</td>
+       <td class="py">1.33</td>
+       <td class="py">1.24</td>
+       <td class="py">1.18</td>
+       <td class="py">1.13</td>
+       <td class="py">1.09</td>
+       <td class="py">1.05</td>
+       <td class="py"></td>
+       <td class="py"></td>
+      </tr>
+      <tr style="text-align: center;" bgColor="#e0e0e0" >
+       <td bgColor="#e0e0e0" >YOY</td> <!-- ((17\' - 18\')/17\')*100 -->
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
       </tr>
       <tr style="text-align: center;">
-       <td>Improvement</td> <!-- (1 - 18\'/17\')*100 -->
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-      </tr>
-      <tr style="text-align: center;">
-       <td rowspan="9" style="text-align: center; vertical-align: middle">Production</td>
-       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Parts Retun Rate">PRR </td>
+       <td bgColor="#e0e0e0" rowspan="9" style="text-align: center; vertical-align: middle">Production</td>
+       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Parts Retun Rate">PRR </td>
        <td>\'17</td>
-       <td class="ly"><b>0</td>
-       <td class="ly"><b>10</td>
-       <td class="ly"><b>91</td>
-       <td class="ly"><b>140</td>
-       <td class="ly"><b>259</td>
-       <td class="ly"><b>295</td>
-       <td class="ly"><b>299</td>
-       <td class="ly"><b>379</td>
-       <td class="ly"><b>395</td>
-       <td class="ly"><b>453</td>
-       <td class="ly"><b>494</td>
-       <td class="ly"><b>531</td>
+       <td class="ly">0</td>
+       <td class="ly">23</td>
+       <td class="ly">333</td>
+       <td class="ly">401</td>
+       <td class="ly">773</td>
+       <td class="ly">544</td>
+       <td class="ly">324</td>
+       <td class="ly">755</td>
+       <td class="ly">465</td>
+       <td class="ly">766</td>
+       <td class="ly">769</td>
+       <td class="ly">830</td>
       </tr>
       <tr style="text-align: center;">
        <td>\'18</td>
-       <td class="py"><b>728</td>
-       <td class="py"><b>712</td>
-       <td class="py"><b>636</td>
-       <td class="py"><b>579</td>
-       <td class="py"><b>567</td>
-       <td class="py"><b>564</td>
-       <td class="py"><b>501</td>
-       <td class="py"><b>486</td>
-       <td class="py"><b>479</td>
-       <td class="py"><b>482</td>
-       <td class="py"><b></td>
-       <td class="py"><b></td>
+       <td class="py">728</td>
+       <td class="py">679</td>
+       <td class="py">473</td>
+       <td class="py">312</td>
+       <td class="py">500</td>
+       <td class="py">0</td>
+       <td class="py">29</td>
+       <td class="py">420</td>
+       <td class="py">429</td>
+       <td class="py">486</td>
+       <td class="py">289</td>
+       <td class="py"></td>
+      </tr>
+      <tr style="text-align: center;" bgColor="#e0e0e0" >
+       <td bgColor="#e0e0e0" >YOY</td> <!-- ((17\' - 18\')/17\')*100 -->
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
       </tr>
       <tr style="text-align: center;">
-          <td>Improvement</td> <!-- (1 - 18\'/17\')*100 -->
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-       <td class="impr"></td>
-      </tr>
-      <tr style="text-align: center;">
-      <td rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate">TLDR </td>
+      <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate">TLDR </td>
        <td>\'17</td>
-       <td class="ly"><b>3648</td>
-       <td class="ly"><b>3597</td>
-       <td class="ly"><b>3322</td>
-       <td class="ly"><b>140</td>
-       <td class="ly"><b>259</td>
-       <td class="ly"><b>295</td>
-       <td class="ly"><b>299</td>
-       <td class="ly"><b>379</td>
-       <td class="ly"><b>395</td>
-       <td class="ly"><b>453</td>
-       <td class="ly"><b>494</td>
-       <td class="ly"><b>531</td>
+       <td class="ly">3648</td>
+       <td class="ly">3523</td>
+       <td class="ly">2825</td>
+       <td class="ly">3044</td>
+       <td class="ly">5746</td>
+       <td class="ly">6977</td>
+       <td class="ly">5292</td>
+       <td class="ly">3891</td>
+       <td class="ly">5420</td>
+       <td class="ly">3825</td>
+       <td class="ly">4688</td>
+       <td class="ly">2840</td>
       </tr>
       <tr style="text-align: center;">
        <td>\'18</td>
-       <td class="py"><b>2210</td>
-       <td class="py"><b>2051</td>
-       <td class="py"><b>2322</td>
-       <td class="py"><b>2277</td>
-       <td class="py"><b>567</td>
-       <td class="py"><b>564</td>
-       <td class="py"><b>501</td>
-       <td class="py"><b>486</td>
-       <td class="py"><b>479</td>
-       <td class="py"><b>482</td>
-       <td class="py"><b></td>
-       <td class="py"><b></td>
+       <td class="py">2210</td>
+       <td class="py">1867</td>
+       <td class="py">2978</td>
+       <td class="py">1919</td>
+       <td class="py">3487</td>
+       <td class="py">0</td>
+       <td class="py">1054</td>
+       <td class="py">3695</td>
+       <td class="py">4771</td>
+       <td class="py">2290</td>
+       <td class="py">2728</td>
+       <td class="py"></td>
+      </tr>
+      <tr style="text-align: center;" bgColor="#e0e0e0" >
+       <td bgColor="#e0e0e0" >YOY</td> <!-- ((17\' - 18\')/17\')*100 -->
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
       </tr>
       <tr style="text-align: center;">
-          <td>Improvement</td> <!-- (1 - 18\'/17\')*100 -->
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-          <td class="impr"></td>
-      </tr>
-      <tr style="text-align: center;">
-      <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Return Rate">IFRR </td>
+      <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Return Rate">IFRR </td>
        <td>\'17</td>
-       <td class="ly"><b>0.56</td>
-       <td class="ly"><b>0.0</td>
-       <td class="ly"><b>0.31</td>
-       <td class="ly"><b>0.24</td>
-       <td class="ly"><b>2.87</td>
-       <td class="ly"><b>0.34</td>
-       <td class="ly"><b>2.72</td>
-       <td class="ly"><b>0.22</td>
-       <td class="ly"><b>0.14</td>
-       <td class="ly"><b>0.85</td>
-       <td class="ly"><b>0.00</td>
-       <td class="ly"><b>0.22</td>
+       <td class="ly">5627</td>
+       <td class="ly">0</td>
+       <td class="ly">3121</td>
+       <td class="ly">2470</td>
+       <td class="ly">31758</td>
+       <td class="ly">493</td>
+       <td class="ly">27955</td>
+       <td class="ly">2162</td>
+       <td class="ly">1449</td>
+       <td class="ly">8563</td>
+       <td class="ly">0</td>
+       <td class="ly">2209</td>
       </tr>
       <tr style="text-align: center;">
        <td>\'18</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>1.57</td>
-       <td class="py"><b>0.80</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b>0.0</td>
-       <td class="py"><b></td>
-       <td class="py"><b></td>
+       <td class="py">0</td>
+       <td class="py">0</td>
+       <td class="py">6603</td>
+       <td class="py">0</td>
+       <td class="py">8112</td>
+       <td class="py">0</td>
+       <td class="py">0</td>
+       <td class="py">0</td>
+       <td class="py">4649</td>
+       <td class="py">0</td>
+       <td class="py">0</td>
+       <td class="py"></td>
       </tr>
-      <tr style="text-align: center;">
-        <td>Improvement</td> <!-- (1 - 18\'/17\')*100 -->
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
-        <td class="impr"></td>
+      <tr style="text-align: center;" bgColor="#e0e0e0" >
+       <td bgColor="#e0e0e0" >YOY</td> <!-- ((17\' - 18\')/17\')*100 -->
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
+       <td class="impr" bgColor="#e0e0e0" ></td>
       </tr>
      </tbody>
     </table>';

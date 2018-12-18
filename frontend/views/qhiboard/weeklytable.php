@@ -207,19 +207,19 @@ $html = '
        <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
        <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
        <td>Acc. SVC</td>
-       <td class="lp"><b>2727</td>
-       <td class="ao"><b></td>
-       <td class="week">2191 </td>
-       <td class="week">2229 </td>
-       <td class="week">2280 </td>
-       <td class="week"></td>
-       <td class="week"></td>
-       <td class="ap">0 </td>
-       <td class="impr" style="color: green; vertical-align:middle">x% </td>
-      </tr>
-      <tr style="text-align: center;" class="FFR">
-       <td>W. A. Sales</td>
-       <td class="lp"><b>138474  </td>
+         <td class="lp"><b>2447</td>
+         <td class="ao"><b></td>
+         <td class="week">2191 </td>
+         <td class="week">2229 </td>
+         <td class="week">2280 </td>
+         <td class="week"></td>
+         <td class="week"></td>
+         <td class="ap">0 </td>
+         <td class="impr" style="color: green; vertical-align:middle">x% </td>
+        </tr>
+        <tr style="text-align: center;" class="FFR">
+         <td>W. A. Sales</td>
+         <td class="lp"><b>142440  </td>
        <td class="ao"><b></td>
        <td class="week">160874  </td>
        <td class="week">160888  </td>

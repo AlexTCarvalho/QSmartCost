@@ -11,6 +11,139 @@ use yii\helpers\Url;
 $this->title = 'QHI Board';
 //$this->params['breadcrumbs'][] = $this->title;
 
+function semana_do_ano($dia,$mes,$ano){
+
+$var=intval( date('z', mktime(0,0,0,$mes,$dia,$ano) ) / 7 ) + 1;
+
+return $var;
+}
+
+$week = semana_do_ano(date('d'),date('m'),date('Y'));
+$month = date('m');
+$M = strtoupper(date('M'));
+$year = date('Y');
+$Y = date('y');
+$LY = $Y-1;
+
+$connection = Yii::$app->getDb();
+
+      
+
+
+            $start_date = "01-".$month."-".$year;
+            $start_time = strtotime($start_date);
+
+            $end_time = strtotime("+1 month", $start_time);
+
+            for($i=$start_time; $i<$end_time; $i+=86400)
+            {
+               $list[] = date('Y-m-d-D', $i);
+            }
+
+            $week_total = array();
+            foreach ($list as $data) {
+                //print_r(substr($data,-3));
+              //echo $data; // 2018-12-01-Sat
+                if(!(substr($data,-3) == 'Sun' || substr($data,-3) == 'Sat')){
+                    //$htm = $htm . '<th>'. substr($data, -6,-4) .'</th>';
+                    $n = semana_do_ano(substr($data, -6,-4),substr($data, -9, -7),substr($data, 0, 4));
+                    if($n )
+                    array_push($week_total,$n);
+                }
+                
+            }
+            $key = array_search(53, $week_total);
+              if($key!==false){
+                  unset($week_total[$key]);
+              }
+              
+              $week_total = array_unique($week_total);
+              echo $week_total[0];
+              $htm = '<table href="#" id="week-table" style="height: 400px"class="table table-striped table-bordered table-condensed table-hover">
+              <thead>
+        <tr style="text-align: center;">
+         <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
+
+         ';
+              $htm = $htm.'<th style="vertical-align: middle; text-align: center;" rowspan="2" >' . $M .'';
+
+              $htm = $htm.'\''. $LY .' <br> Result</th>
+         <th style="vertical-align: middle; text-align: center;" rowspan="2" >'.$M.'\''.$Y.' <br> Target</th>
+         <th style="vertical-align: middle; text-align: center;" colspan="7" >'.$M.'\''.$Y.'\' Result</th>
+         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Target</th>
+         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Result</th>
+         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Achievement</th>
+        </tr>
+        ';
+
+        foreach ($week_total as $key) {
+          $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="70px"> <b>W'.$key.'</td>';
+        }
+
+        $htm = $htm.'
+
+         <td style="vertical-align: middle; text-align: center;"> <b>Acc. </td>
+         <td style="vertical-align: middle; text-align: center;"> <b>YOY</td> <!--  ((17\' - 18\')/17\')*100-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="text-align: center;">
+         <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
+         <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
+         <td>Acc. SVC</td>
+         <td class="lp"><b>
+
+</table>';
+foreach ($week_total as $key) {
+  $command = $connection->createCommand("SELECT * FROM prr_w WHERE week = ".$week ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+      $result = $command->queryAll();
+      foreach ($result as $perk) {
+        $total = $perk['COUNT(item)'];
+        break;
+      }
+
+      $command = $connection->createCommand("SELECT * FROM tldr_w WHERE week = ".$week ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+      $result = $command->queryAll();
+      foreach ($result as $perk) {
+        $total = $perk['COUNT(item)'];
+        break;
+      }
+
+      $command = $connection->createCommand("SELECT * FROM ifrr_w WHERE week = ".$week ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+      $result = $command->queryAll();
+      foreach ($result as $perk) {
+        $total = $perk['COUNT(item)'];
+        break;
+      }
+}
+
+
+
+/*
+            $htm = $htm.'</tr></thead><tbody>';
+
+            $items = array('Item1 MWO IQC6','Item2 RAC IQC6','Item4 MWO IQC6','Item5 RAC IQC6','Item6 MWO IQC6','Item7 RAC IQC6','Item8 MWO IQC6','Item9 RAC IQC6','Item1 MWO IQC10','Item2 RAC IQC11');
+            foreach ($items as $key) {
+                $htm = $htm . '<tr><td>' . $key . '</td>';
+                foreach ($dias_total as $dia) {
+                    $htm = $htm .'
+                        <td>
+                            <div class="radio">
+                                <label>
+                                  <input type="radio" name="radios_'. $key .'" id="radio_"' . $key.'_'. $dia .'" value="'. $dia .'" >
+                                </label>
+                            </div>
+                        </td>
+                    ';
+                }
+                $htm = $htm . '</tr>';
+            }
+            $htm = $htm.'</tbody>';
+*/
+
 $script = <<< JS
 
   $(document).ready(function(){
@@ -225,6 +358,7 @@ $this->registerJs($script, $position);
         <button id = "showmonth" style="width:200">Tabela Mensal</button>
       <!-- TABELA SEMANAL -->
        <div id = "table">
+        <?php echo $htm;?>
        <table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-bordered table-condensed table-hover">
        <thead>
         <tr style="text-align: center;">
@@ -243,7 +377,7 @@ $this->registerJs($script, $position);
          <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W51</td>
          <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W52</td>
          <td style="vertical-align: middle; text-align: center;"> <b>Acc. </td>
-         <td style="vertical-align: middle; text-align: center;"width="100px"> <b>YOY</td> <!--  ((17' - 18')/17')*100-->
+         <td style="vertical-align: middle; text-align: center;"> <b>YOY</td> <!--  ((17' - 18')/17')*100-->
         </tr>
        </thead>
        <tbody>
@@ -251,7 +385,7 @@ $this->registerJs($script, $position);
          <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
          <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
          <td>Acc. SVC</td>
-         <td class="lp"><b>2727</td>
+         <td class="lp"><b>2447</td>
          <td class="ao"><b></td>
          <td class="week">2191 </td>
          <td class="week">2229 </td>
@@ -263,7 +397,7 @@ $this->registerJs($script, $position);
         </tr>
         <tr style="text-align: center;" class="FFR">
          <td>W. A. Sales</td>
-         <td class="lp"><b>138474  </td>
+         <td class="lp"><b>142440  </td>
          <td class="ao"><b></td>
          <td class="week">160874  </td>
          <td class="week">160888  </td>

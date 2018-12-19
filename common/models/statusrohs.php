@@ -28,7 +28,8 @@ class statusrohs extends \yii\db\ActiveRecord
         return [
             [['month'], 'required'],
             [['month'], 'string', 'max' => 10],
-			[['status'], 'string', 'max' => 15]
+			[['status'], 'string', 'max' => 15],
+            [['reason'], 'string', 'max' => 500]
         ];
     }
 
@@ -40,7 +41,8 @@ class statusrohs extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'month' => 'Month',
-			'status'=>'Status'
+			'status'=>'Status',
+            'reason'=>'Reason'
         ];
     }
 }

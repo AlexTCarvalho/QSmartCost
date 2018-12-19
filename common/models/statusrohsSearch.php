@@ -21,6 +21,7 @@ class statusrohsSearch extends statusrohs
             [['id'], 'integer'],
             [['month'], 'safe'],
 			[['status'], 'safe'],
+            [['reason'], 'safe'],
         ];
     }
 
@@ -42,7 +43,7 @@ class statusrohsSearch extends statusrohs
      */
     public function search($params)
     {
-        $query = statusrohs::find();
+        $query = statusrohs::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -66,6 +67,7 @@ class statusrohsSearch extends statusrohs
         $query->andFilterWhere(['like', 'month', $this->month]);
 		$query->andFilterWhere(['like', 'status', $this->status]);
 
+        $query->andFilterWhere(['like', 'reason', $this->reason]);
         return $dataProvider;
     }
 }

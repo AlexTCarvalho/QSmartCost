@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Qhiboard */
 
 $this->title = 'Update Qhiboard: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Qhiboards', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'qhiboard', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

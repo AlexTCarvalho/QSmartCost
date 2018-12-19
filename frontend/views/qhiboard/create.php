@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model common\models\Qhiboard */
 
 $this->title = 'Create Qhiboard';
-$this->params['breadcrumbs'][] = ['label' => 'Qhiboards', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'qhiboard', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="qhiboard-create">

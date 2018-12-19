@@ -178,7 +178,7 @@ foreach ($week_total as $key) {
       $result = $command->queryAll();
       foreach ($result as $perk) {
         $fc = $perk['accsvc'];
-        $waccsFCR = $perk['waccs'];
+        $sales = $perk['sales'];
         $rateFCR = $perk['rate'];
         break;
       }
@@ -245,14 +245,18 @@ foreach ($week_total as $key) {
          <td class="impr" style="vertical-align:center;"></td>
         </tr>
         <tr  bgColor="#e0e0e0" style="text-align: center;">
-         <td bgColor="#e0e0e0">Rate </td> <!-- ((up/down)*100) -->
-         <td bgColor="#e0e0e0" class="lp"><b>1.97</td>
-         <td bgColor="#e0e0e0" class="ao"><b>1.90</td>
-         <td bgColor="#e0e0e0" class="week" >1.36</td>
-         <td bgColor="#e0e0e0" class="week" >1.39</td>
-         <td bgColor="#e0e0e0" class="week" >1.41</td>
-         <td bgColor="#e0e0e0" class="week" ></td>
-         <td bgColor="#e0e0e0" class="week" ></td>
+         <td bgColor="#e0e0e0">Rate</td> <!-- ((up/down)*100) -->
+         <td bgColor="#e0e0e0" class="lp"><b>'.$rateFFR.'</td>
+         <td bgColor="#e0e0e0" class="ao"><b>1.90</td>';
+      foreach ($FFR3 as $key) {
+        $htm = $htm.'<td class="week"'.$key.'</td>';
+      }
+
+      for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="week"></td>';
+      }
+
+      $htm = $htm.'
          <td bgColor="#e0e0e0" class="ap">0</td>
          <td bgColor="#e0e0e0" class="impr" style="color: green; vertical-align:middle"> x%  </td>
          <td bgColor="#e0e0e0" class="patt">35</td>
@@ -262,37 +266,48 @@ foreach ($week_total as $key) {
         <tr style="text-align: center;">
          <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
          <td>Failure cost</td>
-         <td class="lp"><b>63.5</td>
+         <td class="lp"><b>'.$fc.'</td>
          <td class="ao"><b>60.4</td>
-         <td class="week">13.0</td>
-         <td class="week">14.6</td>
-         <td class="week">14.0</td>
-         <td class="week"></td>
-         <td class="week"></td>
+         ';
+
+      foreach ($FCR1 as $key) {
+        $htm = $htm.'<td class="week">'.$key."</td>";
+      }
+
+      for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="week"></td>';
+      }
+
+      $htm = $htm.'
          <td class="ap">51.9</td>
          <td class="impr" style="color: green; vertical-align:middle"> x%  </td>
         </tr>
         <tr style="text-align: center;">
          <td>Sales</td>
-         <td class="lp"><b>14528.7</td>
-         <td class="ao"><b>13802.3</td>
-         <td class="week">235.2</td><!-- 235.2 -->
-         <td class="week">1437.0</td><!--    1437.0  -->
-         <td class="week">408.0</td><!-- 408.0-->
-         <td class="week"></td><!-- 900.1-->
-         <td class="week"></td>
+         <td class="lp"><b>'.$sales.'</td>
+         <td class="ao"><b>13802.3</td>';
+
+      foreach ($FCR2 as $key) {
+        $htm = $htm.'<td class="week">'.$key.'</td>';
+      }
+      for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="week"></td>';
+      }
+         $htm = $htm.'
          <td class="ap">2980.3</td>
-         <td class="impr" style="color: red; vertical-align:middle"> 298%  </td>
+         <td class="impr" style="color: red; vertical-align:middle">298%</td>
         </tr>
         <tr bgcolor="#e0e0e0" style="text-align: center;">
          <td >Rate </td> <!-- ((up/down)*100) -->
-         <td class="lp"><b>0.44</td>
-         <td class="ao"><b>0.44</td>
-         <td class="week">5.53</td>
-         <td class="week">1.02</td>
-         <td class="week">3.43</td>
-         <td class="week"></td>
-         <td class="week"></td>
+         <td class="lp"><b>'.$rateFCR.'</td>
+         <td class="ao"><b>0.44</td>';
+      foreach ($FCR3 as $key) {
+        $htm = $htm.'<td class="week">'.$key.'</td>';
+      }
+      for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="week"></td>';
+      }
+        $htm = $htm.'
          <td class="ap">1.74</td>
          <td class="impr" style="color: green; vertical-align:middle"> x% </td>
          <td class="patt">20</td>
@@ -303,30 +318,172 @@ foreach ($week_total as $key) {
          <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
          <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
          <td>Poor parts quantity</td>
-         <td class="lp"><b>
+         <td class="lp"><b>.'.$ppq.'</td>
 
-      </table>';
-/*
-            $htm = $htm.'</tr></thead><tbody>';
+         <td class="ao"><b></td>';
 
-            $items = array('Item1 MWO IQC6','Item2 RAC IQC6','Item4 MWO IQC6','Item5 RAC IQC6','Item6 MWO IQC6','Item7 RAC IQC6','Item8 MWO IQC6','Item9 RAC IQC6','Item1 MWO IQC10','Item2 RAC IQC11');
-            foreach ($items as $key) {
-                $htm = $htm . '<tr><td>' . $key . '</td>';
-                foreach ($dias_total as $dia) {
-                    $htm = $htm .'
-                        <td>
-                            <div class="radio">
-                                <label>
-                                  <input type="radio" name="radios_'. $key .'" id="radio_"' . $key.'_'. $dia .'" value="'. $dia .'" >
-                                </label>
-                            </div>
-                        </td>
-                    ';
-                }
-                $htm = $htm . '</tr>';
-            }
-            $htm = $htm.'</tbody>';
-*/
+         foreach ($PRR1 as $key) {
+            $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+      for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="week"></td>';
+      }
+
+      $htm = $htm.'<td class="ap">31</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+        </tr>
+        <tr style="text-align: center;">
+         <td>Production quantity</td>
+         <td class="lp">';
+
+         $htm = $htm.'<b>'.$tpqPRR.'</td>
+         <td class="ao"><b></td>';
+
+         foreach ($PRR2 as $key) {
+           $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+          $htm = $htm.'<td class="week"></td>';
+         }
+
+         $htm = '
+         <td class="ap">40174</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+        </tr>
+        <tr style="text-align: center;" bgColor="#e0e0e0">
+         <td bgColor="#e0e0e0" >PPM </td>
+         <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
+         <td bgColor="#e0e0e0" class="ao"><b>454</td>';
+
+         foreach ($PRR3 as $key) {
+           $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+          $htm = $htm.'<td class="week"></td>';
+         }
+
+         $htm = $htm.'
+         <td bgColor="#e0e0e0" class="ap">772</td>
+         <td bgColor="#e0e0e0" class="impr" style="color: red; vertical-align:middle"> x%  </td>
+         <td bgColor="#e0e0e0" class="patt">15</td>
+         <td bgColor="#e0e0e0" class="pts">15</td>
+         <td bgColor="#e0e0e0" class="prctg">0%</td>
+        </tr>
+        <tr style="text-align: center;">
+        <td rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
+         <td>Defect quantity</td>
+         <td class="lp"><b>'.$def.'</td>
+         <td class="ao"><b></td>';
+
+         foreach ($TLDR1 as $key) {
+           $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+          $htm = $htm.'<td class="week"></td>';
+         }
+
+         $htm = $htm.'
+         <td class="ap">62</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+        </tr>
+        <tr style="text-align: center;">
+         <td>Total production quantity</td>
+         <td class="lp"><b>'.$tpqTLDR.'</td>
+         <td class="ao"><b></td>';
+
+         foreach ($TLDR2 as $key) {
+            $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="week"></td>';
+         }
+
+         $htm = $htm.'
+         <td class="ap">24629</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+        </tr>
+        <tr style="text-align: center;" bgColor="#e0e0e0">
+          <td>PPM</td>
+         <td class="lp"><b>.'$ppmTLDR.'</td>
+         <td class="ao"><b>4200</td>';
+
+         foreach ($TLDR3 as $key) {
+            $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="week"></td>';
+         }
+         $htm = $htm.'
+
+         <td class="ap">24629</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+         <td class="patt">15</td>
+         <td class="pts">12</td>
+         <td class="prctg">0%</td>
+        </tr>
+        <tr style="text-align: center">
+        <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
+        <td>Rework quantity</td>
+         <td class="lp"><b>'.$rew.'</td>
+         <td class="ao"><b></td>';
+
+         foreach ($IFRR1 as $key) {
+            $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="week"></td>';
+         }
+
+         $htm = $htm.'
+         <td class="ap">31</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+        </tr>
+        <tr style="text-align: center;">
+          <td>Total production quantity</td>
+         <td class="lp"><b>'.$tpqIFRR.'</td>
+         <td class="ao"><b></td>';
+         foreach ($IFRR2 as $key) {
+            $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="week"></td>';
+         }
+
+         $htm = '
+         <td class="ap">31</td>
+         <td class="impr" style="color: green; vertical-align:middle"> x% </td>
+        </tr>
+        <tr bgColor="#e0e0e0" style="text-align: center;">
+          <td bgColor="#e0e0e0">PPM</td>
+          <td bgColor="#e0e0e0"class="lp"><b>0</td>
+          <td bgColor="#e0e0e0" class="ao"><b></td>';
+         foreach ($IFRR3 as $key) {
+            $htm = $htm.'<td class="week">'.$key.'</td>';
+         }
+
+         for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="week"></td>';
+         }
+         $htm = $htm.'
+          <td bgColor="#e0e0e0"class="ap">31</td>
+          <td bgColor="#e0e0e0"class="impr" style="color: green; vertical-align:middle"> x% </td>
+          <td bgColor="#e0e0e0"class="patt">15</td>
+          <td bgColor="#e0e0e0"class="pts">15</td>
+          <td bgColor="#e0e0e0"class="prctg">100%</td>
+        </tr>
+        
+       </tbody>';
+      
+
+      $htm = $htm.'</table>';
 
 $script = <<< JS
 

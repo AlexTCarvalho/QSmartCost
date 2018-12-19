@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Qhiboard */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Qhiboards', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'qhiboard', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="qhiboard-view">

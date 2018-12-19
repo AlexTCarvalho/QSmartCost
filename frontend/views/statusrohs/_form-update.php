@@ -44,13 +44,17 @@ $this->registerJs($script, $position);
 		($form->field($model, 'status')->dropdownList(['APPROVED'=>'APPROVED','PENDING'=>'PENDING'], ['prompt' => $model->status])))?>
 	
 	<?= ($model->status === '')?($form->field($model, 'status')->dropdownList(['APPROVED'=>'APPROVED','PENDING'=>'PENDING','NG'=>'NG'], ['prompt' => $model->status])):''?>
+
 	
 	<div id = "texto-motivo">
 		<div class="form-group">
-		    <label for="textarea">Reason</label>
-		    <textarea class="form-control" id="textarea" rows="10"></textarea>
+
+			<?= $form->field($model, 'reason')->textarea(['rows' => '10']) ?>
+	
 		</div>
 	</div>
+
+
     <div class="form-group">
         <?= 
 		

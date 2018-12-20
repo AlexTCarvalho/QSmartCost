@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 19-Dez-2018 às 20:34
+-- Generation Time: 20-Dez-2018 às 21:59
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -52,6 +52,15 @@ CREATE TABLE `fcr_w` (
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `fcr_w`
+--
+
+INSERT INTO `fcr_w` (`id`, `failcost`, `sales`, `rate`, `week`, `month`, `year`) VALUES
+(1, 8.9, 522, 1.7, 49, 12, 2018),
+(2, 12.2, 618, 1.97, 50, 12, 2018),
+(3, 11.4, 597, 1.91, 51, 12, 2018);
 
 -- --------------------------------------------------------
 
@@ -194,7 +203,9 @@ INSERT INTO `ifrr_w` (`id`, `rework`, `tpq`, `ppm`, `week`, `month`, `year`) VAL
 (2, 0, 3703, 0, 50, 12, 2018),
 (3, 0, 10005, 0, 48, 11, 2018),
 (4, 0, 7456, 0, 49, 12, 2018),
-(5, 0, 4296, 0, 50, 12, 2018);
+(5, 0, 4296, 0, 50, 12, 2018),
+(6, 0, 5194, 0, 51, 12, 2018),
+(7, 0, 6255, 0, 50, 12, 2018);
 
 -- --------------------------------------------------------
 
@@ -206,7 +217,7 @@ CREATE TABLE `prr_acc` (
   `id` int(11) NOT NULL,
   `ppq` int(11) NOT NULL,
   `prodquant` int(11) NOT NULL,
-  `ppm` double NOT NULL,
+  `ppm` int(11) NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -250,7 +261,7 @@ CREATE TABLE `prr_w` (
   `id` int(11) NOT NULL,
   `ppq` int(11) NOT NULL,
   `prodquant` int(11) NOT NULL,
-  `ppm` double NOT NULL,
+  `ppm` int(11) NOT NULL,
   `week` int(11) NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
@@ -269,7 +280,31 @@ INSERT INTO `prr_w` (`id`, `ppq`, `prodquant`, `ppm`, `week`, `month`, `year`) V
 (6, 4, 7671, 521, 50, 12, 2018),
 (7, 3, 9364, 320, 50, 12, 2018),
 (8, 3, 9691, 310, 50, 12, 2018),
-(9, 3, 10557, 284, 50, 12, 2018);
+(9, 3, 10557, 284, 50, 12, 2018),
+(10, 0, 10832, 0, 51, 12, 2018);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `qhi_results`
+--
+
+CREATE TABLE `qhi_results` (
+  `id` int(11) NOT NULL,
+  `rate` varchar(30) NOT NULL,
+  `result` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `qhi_results`
+--
+
+INSERT INTO `qhi_results` (`id`, `rate`, `result`) VALUES
+(1, 'FFR', 35),
+(2, 'FCR', 4),
+(3, 'PRR', 15),
+(4, 'TLDR', 12),
+(5, 'IFRR', 15);
 
 -- --------------------------------------------------------
 
@@ -281,7 +316,7 @@ CREATE TABLE `tldr_acc` (
   `id` int(11) NOT NULL,
   `defect` int(11) NOT NULL,
   `tpq` int(11) NOT NULL,
-  `ppm` double NOT NULL,
+  `ppm` int(11) NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -313,7 +348,7 @@ INSERT INTO `tldr_acc` (`id`, `defect`, `tpq`, `ppm`, `month`, `year`) VALUES
 (20, 186, 34505, 5420, 9, 2017),
 (21, 131, 35034, 3825, 10, 2017),
 (22, 156, 33420, 4688, 11, 2017),
-(23, 88, 31688, 2840, 12, 2017);
+(23, 88, 31688, 2778, 12, 2017);
 
 -- --------------------------------------------------------
 
@@ -325,7 +360,7 @@ CREATE TABLE `tldr_w` (
   `id` int(11) NOT NULL,
   `defect` int(11) NOT NULL,
   `tpq` int(11) NOT NULL,
-  `ppm` double NOT NULL,
+  `ppm` int(11) NOT NULL,
   `week` int(11) NOT NULL,
   `month` int(11) NOT NULL,
   `year` int(11) NOT NULL
@@ -342,7 +377,9 @@ INSERT INTO `tldr_w` (`id`, `defect`, `tpq`, `ppm`, `week`, `month`, `year`) VAL
 (4, 15, 3703, 4051, 50, 12, 2018),
 (5, 21, 4296, 4888, 50, 12, 2018),
 (6, 11, 10005, 5201, 48, 11, 2018),
-(7, 7, 7456, 1477, 49, 12, 2018);
+(7, 7, 7456, 1477, 49, 12, 2018),
+(8, 22, 5194, 4236, 51, 12, 2018),
+(9, 39, 6255, 6235, 50, 12, 2018);
 
 --
 -- Indexes for dumped tables
@@ -397,6 +434,12 @@ ALTER TABLE `prr_w`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `qhi_results`
+--
+ALTER TABLE `qhi_results`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tldr_acc`
 --
 ALTER TABLE `tldr_acc`
@@ -422,7 +465,7 @@ ALTER TABLE `fcr_acc`
 -- AUTO_INCREMENT for table `fcr_w`
 --
 ALTER TABLE `fcr_w`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `ffr_acc`
@@ -446,7 +489,7 @@ ALTER TABLE `ifrr_acc`
 -- AUTO_INCREMENT for table `ifrr_w`
 --
 ALTER TABLE `ifrr_w`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `prr_acc`
@@ -458,7 +501,13 @@ ALTER TABLE `prr_acc`
 -- AUTO_INCREMENT for table `prr_w`
 --
 ALTER TABLE `prr_w`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `qhi_results`
+--
+ALTER TABLE `qhi_results`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tldr_acc`
@@ -470,7 +519,7 @@ ALTER TABLE `tldr_acc`
 -- AUTO_INCREMENT for table `tldr_w`
 --
 ALTER TABLE `tldr_w`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

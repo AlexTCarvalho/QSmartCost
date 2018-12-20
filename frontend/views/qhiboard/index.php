@@ -11,529 +11,657 @@ use yii\helpers\Url;
 $this->title = 'QHI Board';
 //$this->params['breadcrumbs'][] = $this->title;
 
+$connection = Yii::$app->getDb();
 function semana_do_ano($dia,$mes,$ano){
 
-$var=intval( date('z', mktime(0,0,0,$mes,$dia,$ano) ) / 7 ) + 1;
+        $var=intval( date('z', mktime(0,0,0,$mes,$dia,$ano) ) / 7 ) + 1;
 
-return $var;
-}
-
-$week = semana_do_ano(date('d'),date('m'),date('Y'));
-$month = date('m');
-$M = strtoupper(date('M'));
-$year = date('Y');
-$Y = date('y');
-$ly = $Y-1;
-$LY = $year - 1;
-
-$connection = Yii::$app->getDb();
-
-      
-
-
-            $start_date = "01-".$month."-".$year;
-            $start_time = strtotime($start_date);
-
-            $end_time = strtotime("+1 month", $start_time);
-
-            for($i=$start_time; $i<$end_time; $i+=86400)
-            {
-               $list[] = date('Y-m-d-D', $i);
-            }
-
-            $week_total = array();
-            foreach ($list as $data) {
-                //print_r(substr($data,-3));
-              //echo $data; // 2018-12-01-Sat
-                if(!(substr($data,-3) == 'Sun' || substr($data,-3) == 'Sat')){
-                    //$htm = $htm . '<th>'. substr($data, -6,-4) .'</th>';
-                    $n = semana_do_ano(substr($data, -6,-4),substr($data, -9, -7),substr($data, 0, 4));
-                    $lastday = substr($data,-6,-4);
-                    if ($n < 10){
-                      $n = '0'.$n.'';
-                    }
-                    array_push($week_total,$n);
-                }
-                
-            }
-            $key = array_search(53, $week_total);
-              if($key!==false){
-                  unset($week_total[$key]);
-              }
-              
-              $week_total = array_unique($week_total);
-              
-
-$FFR1 = array();
-$FFR2 = array();
-$FFR3 = array();
-$FCR1 = array();
-$FCR2 = array();
-$FCR3 = array();
-$PRR1 = array();
-$PRR2 = array();
-$PRR3 = array();
-$TLDR1 = array();
-$TLDR2 = array();
-$TLDR3 = array();
-$IFRR1 = array();
-$IFRR2 = array();
-$IFRR3 = array();
-
-foreach ($week_total as $key) {
-
-
-  $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $accsvc = $perk['accsvc'];
-        $waccs = $perk['waccs'];
-        $rate = $perk['rate'];
-        array_push($FFR1,$accsvc);
-        array_push($FFR2,$waccs);
-        array_push($FFR3,$rate);
-        break;
-      }
-
-  $command = $connection->createCommand("SELECT ppq, prodquant, ppm FROM bd_lg.prr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $ppq = $perk['ppq'];
-        $tpq = $perk['prodquant'];
-        $ppm = $perk['ppm'];
-        array_push($PRR1,$ppq);
-        array_push($PRR2,$tpq);
-        array_push($PRR3,$ppm);
-        break;
-      }
-
-      $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
-
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $def = $perk['defect'];
-        $tpq = $perk['tpq'];
-        $ppm = $perk['ppm'];
-        array_push($TLDR1,$def);
-        array_push($TLDR2,$tpq);
-        array_push($TLDR3,$ppm);
-        break;
-      }
-
-      $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
-
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $rew = $perk['rework'];
-        $tpq = $perk['tpq'];
-        $ppm = $perk['ppm'];
-        array_push($IFRR1,$rew);
-        array_push($IFRR2,$tpq);
-        array_push($IFRR3,$ppm);
-        break;
-      }
-}
-
-  $command = $connection->createCommand("SELECT * FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $accsvc = $perk['accsvc'];
-        $waccs = $perk['waccs'];
-        $rateFFR = $perk['rate'];
-        break;
-      }       
-/*
-  $command = $connection->createCommand("SELECT failcost, sales, rate FROM fcr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $fc = $perk['failcost'];
-        $sales = $perk['sales'];
-        $rateFCR = $perk['rate'];
-        $fc = 1254;
-        $sales = 1568548;
-        $rateFCR = 1.12;
-        break;
-      }
-      */
-  $command = $connection->createCommand("SELECT ppq, prodquant, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $ppq = $perk['ppq'];
-        $tpqPRR= $perk['prodquant'];
-        $ppmPRR = $perk['ppm'];
-        break;
-      }
-
-  $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $def = $perk['defect'];
-        $tpqTLDR = $perk['tpq'];
-        $ppmTLDR = $perk['ppm'];
-        break;
-      }
-  $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $rew = $perk['rework'];
-        $tpqIFRR = $perk['tpq'];
-        $ppmIFRR = $perk['ppm'];
-        break;
-      }
-$colspan = sizeof($week_total)+2;
-$htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-bordered table-condensed table-hover">
-              <thead>
-        <tr style="text-align: center;">
-         <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
-
-         ';
-              $htm = $htm.'<th style="vertical-align: middle; text-align: center;" rowspan="2" >' . $M .'';
-
-              $htm = $htm.'\''. $ly .' <br> Result</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >'.$M.'\''.$Y.' <br> Target</th>
-         <th style="vertical-align: middle; text-align: center;" colspan="'.$colspan.'" >'.$M.'\''.$Y.'\' Result</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Target</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Result</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Achievement</th>
-        </tr>
-        ';
-
-        foreach ($week_total as $key) {
-          $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="70px"> <b>W'.$key.'</td>';
+        return $var;
         }
 
-        $htm = $htm.'
+        function impr1($lp, $ap){
+            $var = round(($lp-$ap)/$lp*100);
+            if ($lp == 0){
+              if ($ap == 0){
+                $var = 0;
+              }else{
+                $var = -100;
+              }
+            }
+            if ($var > 0){
+                $var = '<td class="impr" bgColor = "#32f032" style="color: black; vertical-align:middle"><b>'.$var.'% ↓';
+            }else if ($var >= -10){
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "yellow" style="color: black; vertical-align:middle"><b>'.$var.'% ↑';
+            }else{
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "f00f0f" style="color: white; vertical-align:middle"><b>'.$var.'% ↑';
+            }
+            return $var;
+        }
 
-         <td style="vertical-align: middle; text-align: center;"> <b>Acc. </td>
-         <td style="vertical-align: middle; text-align: center;"> <b>YOY</td> <!--  ((17\' - 18\')/17\')*100-->
-        </tr>
-        </thead>
-        <tbody>
-        <tr style="text-align: center;">
-         <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
-         <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
-         <td>Acc. SVC</td>
-         <td class="lp">';
+        function impr2($lp, $ap){
+            $var = round(($lp-$ap)/$lp*100);
+            if ($var >= 10){
+                $var = '<td class="impr" bgColor = "#f00f0f" style="color: white; vertical-align:middle"><b>'.$var.'% ↓';
+            }else if ($var >= 0){
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "yellow" style="color: black; vertical-align:middle"><b>'.$var.'% ↑';
+            }else{
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "#32f032" style="color: black; vertical-align:middle"><b>'.$var.'% ↑';
+            }
+            return $var;
+        }
 
-      $htm = $htm.'<b>'.$accsvc.'</td>
-         <td class="ao"><b></td>';
-      $restam = sizeof($week_total);
-      foreach ($FFR1 as $key){
-        $htm = $htm.'<td class="week">'.$key.'</td>';
-        $restam--;
-      }
-
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="week"></td>';
-      }
-      
-      $htm = $htm.'
-         <td class="ap">0 </td>
-         
-         <td class="impr" style="vertical-align:middle">x% </td>
-        </tr>
-        <tr style="text-align: center;" class="FFR">
-         <td>W. Acc. Sales</td>
-         <td class="lp"><b>'.$waccs.'</td>
-         <td class="ao"><b></td>';
-
-      foreach ($FFR2 as $key) {
-        $htm = $htm.'<td class="week">'.$key.'</td>';
-      }
-
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="week"></td>';
-      }
-
-      $htm = $htm.'
-         <td class="ap">0</td>
-         <td class="impr" style="vertical-align:center;"></td>
-        </tr>
-        <tr  bgColor="#e0e0e0" style="text-align: center;">
-         <td bgColor="#e0e0e0">Rate</td>
-         <td bgColor="#e0e0e0" class="lp"><b>'.$rateFFR.'</td>
-         <td bgColor="#e0e0e0" class="ao"><b>1.90</td>';
-         
-      foreach ($FFR3 as $key) {
-        $htm = $htm.'<td bgcolor="#e0e0e0" class="week">'.$key.'</td>';
-      }
-
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
-      }
-
-      $htm = $htm.'
-         <td bgColor="#e0e0e0" class="ap">0</td>
-         <td bgColor="#e0e0e0" class="impr" style="vertical-align:middle"> x%  </td>
-         <td bgColor="#e0e0e0" class="patt">35</td>
-         <td bgColor="#e0e0e0" class="pts" >35</td>
-         <td bgColor="#e0e0e0" class="prctg">0% </td>
-        </tr>';
-// AQUI COMEÇA O FCR
-        $htm = $htm.'
-        <tr style="text-align: center;">
-         <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
-         <td>Failure cost</td>
-         <td class="lp"><b>'.$accsvc.'</td>
-         <td class="ao"><b>60.4</td>
-         ';
-
-      $restam = sizeof($week_total);
-      foreach ($FCR1 as $key) {
-        $htm = $htm.'<td class="week">'.$accsvc."</td>";
-        $restam--;
-      }
-
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="week"></td>';
-      }
-
-      $htm = $htm.'
-         <td class="ap">51.9</td>
-         <td class="impr" style="vertical-align:middle"> x%  </td>
-        </tr>
-        <tr style="text-align: center;">
-         <td>Sales</td>
-         <td class="lp"><b>'.$waccs.'</td>
-         <td class="ao"><b>13802.3</td>';
-
-      foreach ($FCR2 as $key) {
-        $htm = $htm.'<td class="week">'.$waccs.'</td>';
-      }
-      
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="week"></td>';
-      }
-
-         $htm = $htm.'
-         <td class="ap">2980.3</td>
-         <td class="impr" style="vertical-align:middle">298%</td>
-        </tr>
-        <tr bgcolor="#e0e0e0" style="text-align: center;">
-         <td >Rate </td>
-         <td class="lp"><b>'.$rateFFR.'</td>
-         <td class="ao"><b>0.44</td>';
-      foreach ($FCR3 as $key) {
-        $htm = $htm.'<td class="week">'.$rateFFR.'</td>';
-      }
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="week"></td>';
-      }
-        $htm = $htm.'
-         <td class="ap">1.74</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-         <td class="patt">20</td>
-         <td class="pts" ">4 </td>
-         <td class="prctg">0% </td>
-        </tr>';
-
-        $htm = $htm.'
-        <tr style="text-align: center;">
-         <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
-         <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
-         <td>Defect quantity</td>
-         <td class="lp"><b>'.$ppq.'</td>
-
-         <td class="ao"><b></td>';
-
-      $restam = sizeof($week_total);
-
-         foreach ($PRR1 as $key) {
-            $htm = $htm.'<td class="week">'.$key.'</td>';
-            $restam--;
-         }
-
-      for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="week"></td>';
-      }
-
-      $htm = $htm.'<td class="ap">31</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-        </tr>
-        <tr style="text-align: center;">
-         <td>Production quantity</td>
-         <td class="lp">';
-
-         $htm = $htm.'<b>'.$tpqPRR.'</td>
-         <td class="ao"><b></td>';
-
-         foreach ($PRR2 as $key) {
-           $htm = $htm.'<td class="week">'.$key.'</td>';
-         }
-
-         for ($i=0; $i < $restam; $i++) { 
-          $htm = $htm.'<td class="week"></td>';
-         }
-
-         $htm = $htm.'
-         <td class="ap">40174</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-        </tr>
-        <tr style="text-align: center;" bgColor="#e0e0e0">
-         <td bgColor="#e0e0e0" >PPM</td>
-         <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
-         <td bgColor="#e0e0e0" class="ao"><b>454</td>';
-
-         foreach ($PRR3 as $key) {
-           $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
-         }
-
-         for ($i=0; $i < $restam; $i++) { 
-          $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
-         }
-
-         $htm = $htm.'
-         <td bgColor="#e0e0e0" class="ap">772</td>
-         <td bgColor="#e0e0e0" class="impr" style="vertical-align:middle"> x%  </td>
-         <td bgColor="#e0e0e0" class="patt">15</td>
-         <td bgColor="#e0e0e0" class="pts">15</td>
-         <td bgColor="#e0e0e0" class="prctg">0%</td>
-        </tr>';
-        
-        $htm = $htm.'
-        <tr style="text-align: center;">
-        <td rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
-         <td>Defect quantity</td>
-         <td class="lp"><b>'.$def.'</td>
-         <td class="ao"><b></td>';
-         $restam = sizeof($week_total);
-         foreach ($TLDR1 as $key) {
-           $htm = $htm.'<td class="week">'.$key.'</td>';
-           $restam--;
-         }
+        function impr3($lp, $ap){
+            $var = round(($lp-$ap)/$lp*100);
+            if ($var >= 10){
+                $var = '<td class="impr" bgColor = "#f00f0f" style="color: white; vertical-align:middle"><b>'.$var.'% ↓';
+            }else if ($var > 0){
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "yellow" style="color: black; vertical-align:middle"><b>'.$var.'% ↑';
+            }else{
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "#32f032" style="color: black; vertical-align:middle"><b>'.$var.'% ↑';
+            }
+            return $var;
+        }
 
 
-         for ($i=0; $i < $restam; $i++) { 
-          $htm = $htm.'<td class="week"></td>';
-         }
+        $week = semana_do_ano(date('d'),date('m'),date('Y'));
+        $month = date('m');
+        $M = strtoupper(date('M'));
+        $year = date('Y');
+        $Y = date('y');
+        $ly = $Y-1;
+        $LY = $year - 1;
 
-         $htm = $htm.'
-         <td class="ap">62</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-        </tr>
-        <tr style="text-align: center;">
-         <td>Total production quantity</td>
-         <td class="lp"><b>'.$tpqTLDR.'</td>
-         <td class="ao"><b></td>';
 
-         foreach ($TLDR2 as $key) {
-            $htm = $htm.'<td class="week">'.$key.'</td>';
-         }
+              
 
-         for ($i=0; $i < $restam; $i++) { 
-            $htm = $htm.'<td class="week"></td>';
-         }
 
-         $htm = $htm.'
-         <td class="ap">24629</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-        </tr>
-        <tr style="text-align: center;" bgColor="#e0e0e0">
-          <td>PPM</td>
-         <td class="lp"><b>'.$ppmTLDR.'</td>
-         <td class="ao"><b>4200</td>';
+                    $start_date = "01-".$month."-".$year;
+                    $start_time = strtotime($start_date);
 
-         foreach ($TLDR3 as $key) {
-            $htm = $htm.'<td class="week">'.$key.'</td>';
-         }
+                    $end_time = strtotime("+1 month", $start_time);
 
-         for ($i=0; $i < $restam; $i++) { 
-            $htm = $htm.'<td class="week"></td>';
-         }
-         $htm = $htm.'
+                    for($i=$start_time; $i<$end_time; $i+=86400)
+                    {
+                       $list[] = date('Y-m-d-D', $i);
+                    }
 
-         <td class="ap">24629</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-         <td class="patt">15</td>
-         <td class="pts">12</td>
-         <td class="prctg">0%</td>
-        </tr>';
+                    $week_total = array();
+                    foreach ($list as $data) {
+                        //print_r(substr($data,-3));
+                      //echo $data; // 2018-12-01-Sat
+                        if(!(substr($data,-3) == 'Sun' || substr($data,-3) == 'Sat')){
+                            //$htm = $htm . '<th>'. substr($data, -6,-4) .'</th>';
+                            $n = semana_do_ano(substr($data, -6,-4),substr($data, -9, -7),substr($data, 0, 4));
+                            $lastday = substr($data,-6,-4);
+                            if ($n < 10){
+                              $n = '0'.$n.'';
+                            }
+                            array_push($week_total,$n);
+                        }
+                        
+                    }
+                    $key = array_search(53, $week_total);
+                      if($key!==false){
+                          unset($week_total[$key]);
+                      }
+                      
+                      $week_total = array_unique($week_total);
+                      
 
-// IFRR começa aqui
-        $htm = $htm.'
-        <tr style="text-align: center">
-        <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
-        <td>Rework quantity</td>
-         <td class="lp"><b>'.$rew.'</td>
-         <td class="ao"><b></td>';
-         $restam = sizeof($week_total);
-         foreach ($IFRR1 as $key) {
-            $htm = $htm.'<td class="week">'.$key.'</td>';
-            $restam--;
-         }
+        $FFR1 = array();
+        $FFR2 = array();
+        $FFR3 = array();
+        $FCR1 = array();
+        $FCR2 = array();
+        $FCR3 = array();
+        $PRR1 = array();
+        $PRR2 = array();
+        $PRR3 = array();
+        $TLDR1 = array();
+        $TLDR2 = array();
+        $TLDR3 = array();
+        $IFRR1 = array();
+        $IFRR2 = array();
+        $IFRR3 = array();
 
-         for ($i=0; $i < $restam; $i++) { 
-            $htm = $htm.'<td class="week"></td>';
-         }
+        foreach ($week_total as $key) {
 
-         $htm = $htm.'
-         <td class="ap">31</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-        </tr>
-        <tr style="text-align: center;">
-          <td>Total production quantity</td>
-         <td class="lp"><b>'.$tpqIFRR.'</td>
-         <td class="ao"><b></td>';
-         foreach ($IFRR2 as $key) {
-            $htm = $htm.'<td class="week">'.$key.'</td>';
-         }
 
-         for ($i=0; $i < $restam; $i++) { 
-            $htm = $htm.'<td class="week"></td>';
-         }
+          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $accsvc = $perk['accsvc'];
+                $waccs = $perk['waccs'];
+                $rate = $perk['rate'];
+                array_push($FFR1,$accsvc);
+                array_push($FFR2,$waccs);
+                array_push($FFR3,$rate);
+                break;
+              }
 
-         $htm = $htm.'
-         <td class="ap">31</td>
-         <td class="impr" style="vertical-align:middle"> x% </td>
-        </tr>
-        <tr bgColor="#e0e0e0" style="text-align: center;">
-          <td bgColor="#e0e0e0">PPM</td>
-          <td bgColor="#e0e0e0"class="lp"><b>0</td>
-          <td bgColor="#e0e0e0" class="ao"><b></td>';
-          
-         foreach ($IFRR3 as $key) {
-            $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
-         }
+              $command = $connection->createCommand("SELECT failcost, sales, rate FROM bd_lg.fcr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $fc = $perk['failcost'];
+                $sales = $perk['sales'];
+                $rate = $perk['rate'];
+                array_push($FCR1,$fc);
+                array_push($FCR2,$sales);
+                array_push($FCR3,$rate);
+                break;
+              }
 
-         for ($i=0; $i < $restam; $i++) { 
-            $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
-         }
-         $colspan = 2+$colspan-1;
-         $htm = $htm.'
-          <td bgColor="#e0e0e0"class="ap">31</td>
-          <td bgColor="#e0e0e0"class="impr" style="vertical-align:middle"> x% </td>
-          <td bgColor="#e0e0e0"class="patt">15</td>
-          <td bgColor="#e0e0e0"class="pts">15</td>
-          <td bgColor="#e0e0e0"class="prctg">100%</td>
-        </tr>
-        <tr style="text-align: center;">
-        <td bgColor="#e0e0e0"colspan = 3>Total</td>
-        <td bgColor="#e0e0e0"colspan = '.$colspan.'></td>
-        <td></td>
-        <td class="patt"></td>
-        <td class="pts"></td>
-        <td class="prctg"></td>
-        </tr>
-       </tbody>';
-      
-      $htm = $htm.'</table>';
+          $command = $connection->createCommand("SELECT ppq, prodquant, ppm FROM bd_lg.prr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ppq = $perk['ppq'];
+                $tpq = $perk['prodquant'];
+                $ppm = $perk['ppm'];
+                array_push($PRR1,$ppq);
+                array_push($PRR2,$tpq);
+                array_push($PRR3,$ppm);
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $def = $perk['defect'];
+                $tpq = $perk['tpq'];
+                $ppm = $perk['ppm'];
+                array_push($TLDR1,$def);
+                array_push($TLDR2,$tpq);
+                array_push($TLDR3,$ppm);
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $rew = $perk['rework'];
+                $tpq = $perk['tpq'];
+                $ppm = $perk['ppm'];
+                array_push($IFRR1,$rew);
+                array_push($IFRR2,$tpq);
+                array_push($IFRR3,$ppm);
+                break;
+              }
+        }
+
+          $command = $connection->createCommand("SELECT * FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $accsvc = $perk['accsvc'];
+                $waccs = $perk['waccs'];
+                $rateFFR = $perk['rate'];
+                break;
+              }       
+        /*
+          $command = $connection->createCommand("SELECT failcost, sales, rate FROM fcr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $fc = $perk['failcost'];
+                $sales = $perk['sales'];
+                $rateFCR = $perk['rate'];
+                break;
+              }
+              */
+          $command = $connection->createCommand("SELECT ppq, prodquant, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ppq = $perk['ppq'];
+                $tpqPRR= $perk['prodquant'];
+                $ppmPRR = $perk['ppm'];
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $def = $perk['defect'];
+                $tpqTLDR = $perk['tpq'];
+                $ppmTLDR = $perk['ppm'];
+                break;
+              }
+          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $rew = $perk['rework'];
+                $tpqIFRR = $perk['tpq'];
+                $ppmIFRR = $perk['ppm'];
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'FFR' ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ptsFFR = $perk['result'];
+                break;
+              }
+            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'FCR' ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ptsFCR = $perk['result'];
+                break;
+              }
+            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'PRR' ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ptsPRR = $perk['result'];
+                break;
+              }
+            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'TLDR' ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ptsTLDR = $perk['result'];
+                break;
+            }
+
+            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'IFRR' ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ptsIFRR = $perk['result'];
+                break;
+            }
+
+
+        $colspan = sizeof($week_total)+2;
+        $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
+                      <thead>
+                <tr style="text-align: center; font-size:110%;">
+                 <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
+
+                 ';
+                      $htm = $htm.'<th style="vertical-align: middle; text-align: center;" rowspan="2" >' . $M .'';
+
+                      $htm = $htm.'\''. $ly .' <br> Result</th>
+                 <th style="vertical-align: middle; text-align: center;" rowspan="2" >'.$M.'\''.$Y.' <br> Target</th>
+                 <th style="vertical-align: middle; text-align: center;" colspan="'.$colspan.'" >'.$M.'\''.$Y.'\' Result</th>
+                 <th style="vertical-align: middle; text-align: center;" rowspan="2" >Target</th>
+                 <th style="vertical-align: middle; text-align: center;" rowspan="2" >Result</th>
+                 <th style="vertical-align: middle; text-align: center;" rowspan="2" >Achievement</th>
+                </tr>
+                ';
+
+                foreach ($week_total as $key) {
+                  $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="70px"> <b>W'.$key.'</td>';
+                }
+
+                $htm = $htm.'
+
+                 <td style="vertical-align: middle; text-align: center;"> <b>Acc. </td>
+                 <td style="vertical-align: middle; text-align: center;"> <b>YOY</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="text-align: center; font-size:110%;">
+                 <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
+                 <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
+                 <td>Acc. SVC</td>
+                 <td class="lp">';
+
+              $htm = $htm.'<b>'.$accsvc.'</td>
+                 <td class="ao"><b></td>';
+              $restam = sizeof($week_total);
+              foreach ($FFR1 as $key){
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $Acc = $key;
+                $restam--;
+              }
+
+              $yoy = impr1($accsvc,$Acc);
+
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+              
+              $htm = $htm.'
+                 <td class="ap"><b>'.$Acc.'</td>
+                 
+                 '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;" class="FFR">
+                 <td>W. Acc. Sales</td>
+                 <td class="lp"><b>'.$waccs.'</td>
+                 <td class="ao"><b></td>';
+              foreach ($FFR2 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $Acc=$key;
+              }
+              $yoy = impr2($waccs,$Acc);
+
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+
+              $htm = $htm.'
+                 <td class="ap"><b>'.$Acc.'</td>
+                 '.$yoy.'
+                </tr>
+                <tr  bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
+                 <td bgColor="#e0e0e0">Rate</td>
+                 <td bgColor="#e0e0e0" class="lp"><b>'.$rateFFR.'</td>
+                 <td bgColor="#e0e0e0" class="ao"><b>1,90</td>';
+                 
+              foreach ($FFR3 as $key) {
+                $htm = $htm.'<td bgcolor="#e0e0e0" class="week">'.$key.'</td>';
+                $Acc=$key;
+              }
+              $yoy = impr1($rateFFR,$Acc);
+
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
+              }
+
+              $p = ($ptsFFR/35)*100;
+              $htm = $htm.'
+                 <td bgColor="#e0e0e0" class="ap"><b>'.$Acc.'</td>
+                 '.$yoy.'
+                 <td bgColor="#e0e0e0" class="patt">35</td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$p.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">0% </td>
+                </tr>';
+        // AQUI COMEÇA O FCR
+                $fc = 63.5;
+                $sales = 14528;
+                $rateFCR = 0.44;
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%;">
+                 <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
+                 <td>Failure cost</td>
+                 <td class="lp"><b>'.$fc.'</td>
+                 <td class="ao"><b>60,4</td>
+                 ';
+
+              $restam = sizeof($week_total);
+              $soma = 0;
+              foreach ($FCR1 as $key) {
+                $htm = $htm.'<td class="week">'.$key."</td>";
+                $restam--;
+                $soma += $key;
+              }
+
+              $yoy = impr1($fc,$soma);
+
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+              $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                 <td>Sales</td>
+                 <td class="lp"><b>'.$sales.'</td>
+                 <td class="ao"><b>13802</td>';
+                 $soma1 = 0;
+              foreach ($FCR2 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $soma1 += $key;
+              }
+              
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+              $yoy = impr2($sales,$soma1);
+                 $htm = $htm.'
+                 <td class="ap"><b>'.$soma1.'</td>
+                 '.$yoy.'
+                </tr>
+                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                 <td >Rate </td>
+                 <td class="lp"><b>'.$rateFCR.'</td>
+                 <td class="ao"><b>0.44</td>';
+              foreach ($FCR3 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+              }
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+              $soma = round($soma/$soma1*100,2);
+              $yoy = impr1($rateFCR,$soma);
+
+                $p = ($ptsFCR/20)*100;
+                $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 '.$yoy.'
+                 <td class="patt">20</td>
+                 <td class="pts" ">'.$p.'</td>
+                 <td class="prctg">0% </td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%;">
+                 <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
+                 <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
+                 <td>Defect quantity</td>
+                 <td class="lp"><b>'.$ppq.'</td>
+
+                 <td class="ao"><b></td>';
+
+              $restam = sizeof($week_total);
+              $soma = 0;
+                foreach ($PRR1 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $restam--;
+                    $soma += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+                $yoy = impr1($ppq,$soma);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                 <td>Production quantity</td>
+                 <td class="lp">';
+
+                 $htm = $htm.'<b>'.$tpqPRR.'</td>
+                 <td class="ao"><b></td>';
+                 $soma1 = 0;
+                 foreach ($PRR2 as $key) {
+                   $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $soma1 += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+                $yoy = impr2($tpqPRR,$soma1);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma1.'</td>
+                     '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
+                 <td bgColor="#e0e0e0" >PPM</td>
+                 <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
+                 <td bgColor="#e0e0e0" class="ao"><b>454</td>';
+
+                 $soma = round(($soma/$soma1)*1000000);
+                 foreach ($PRR3 as $key) {
+                   $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                $yoy = impr1($ppmPRR,$soma);
+                $p = ($ptsPRR/15)*100;
+                $htm = $htm.'
+                     <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                     '.$yoy.'
+
+                 <td bgColor="#e0e0e0" class="patt">15</td>
+                 <td bgColor="#e0e0e0" class="pts">'.$p.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">0%</td>
+                </tr>';
+                
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%;">
+                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
+                 <td>Defect quantity</td>
+                 <td class="lp"><b>'.$def.'</td>
+                 <td class="ao"><b></td>';
+                 $soma = 0;
+                 $restam = sizeof($week_total);
+                 foreach ($TLDR1 as $key) {
+                   $htm = $htm.'<td class="week">'.$key.'</td>';
+                   $restam--;
+                    $soma += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+                $yoy = impr1($def,$soma);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                 <td>Total production quantity</td>
+                 <td class="lp"><b>'.$tpqTLDR.'</td>
+                 <td class="ao"><b></td>';
+                 $soma1 = 0;
+
+                 foreach ($TLDR2 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $soma1 += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+                $yoy = impr2($tpqTLDR,$soma1);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma1.'</td>
+                     '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
+                  <td>PPM</td>
+                 <td class="lp"><b>'.$ppmTLDR.'</td>
+                 <td class="ao"><b>4200</td>';
+                 $soma = round(($soma/$soma1)*1000000);
+
+                 foreach ($TLDR3 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+                $yoy = impr1($ppmTLDR,$soma);
+                $p = ($ptsTLDR/15)*100;
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     '.$yoy.'
+                 <td class="patt">15</td>
+                 <td class="pts">'.$p.'</td>
+                 <td class="prctg">0%</td>
+                </tr>';
+
+        // IFRR começa aqui
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%">
+                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
+                <td>Rework quantity</td>
+                 <td class="lp"><b>'.$rew.'</td>
+                 <td class="ao"><b></td>';
+                 $soma = 0;
+                 $restam = sizeof($week_total);
+                 foreach ($IFRR1 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $restam--;
+                    $soma+=$key;
+                 }
+
+                 for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                 }
+
+                 
+                $yoy = impr1($rew,$soma);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     '.$yoy.'
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                  <td>Total production quantity</td>
+                 <td class="lp"><b>'.$tpqIFRR.'</td>
+                 <td class="ao"><b></td>';
+                 $soma1 = 0;
+                 foreach ($IFRR2 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $soma1+=$key;
+                 }
+
+                 for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                 }
+
+                $yoy = impr2($tpqIFRR,$soma1);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma1.'</td>
+                     '.$yoy.'
+                </tr>
+                <tr bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
+                  <td bgColor="#e0e0e0">PPM</td>
+                  <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
+                  <td bgColor="#e0e0e0" class="ao"><b>2,45</td>';
+                 $soma = round(($soma/$soma1)*1000000);
+                  
+                 foreach ($IFRR3 as $key) {
+                    $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                 }
+
+                 for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                 }
+                 $colspan = 2+$colspan-1;
+                 
+                $yoy = impr1($ppmIFRR,$soma);
+                $somarates = $ptsFFR+$ptsFCR+$ptsPRR+$ptsTLDR+$ptsIFRR;
+                $htm = $htm.'
+                     <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                     '.$yoy.'
+                  <td bgColor="#e0e0e0"class="patt">15</td>
+                  <td bgColor="#e0e0e0"class="pts">15</td>
+                  <td bgColor="#e0e0e0"class="prctg">100%</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                <td bgColor="#e0e0e0"colspan = 3>Total</td>
+                <td bgColor="#e0e0e0"colspan = '.$colspan.'></td>
+                <td></td>
+                <td class="patt">100</td>
+                <td class="pts">'.$somarates.'</td>
+                <td class="prctg">'.$somarates.'%</td>
+                </tr>
+               </tbody>';
+              
+              $htm = $htm.'</table>';
 
 $script = <<< JS
 
   $(document).ready(function(){
     window.location.href='#weekly-table';
+        var wtable = $('#weekly-table');
+    /*
         var j = 0;
         var ly = [];
         var py = [];
         var rs = [];
         
-        var wtable = $('#weekly-table');
         var j = 0;
         var ptsv = [], pattv = [];
         wtable.find('tbody tr').each(function(){
-            /* 
-            ORDEM: FFR-FCR-PRR-TLDR-IFRR
-            */
             if (j % 3 == 0){ ly = [];}
             if (j % 3 == 1){ py = [];}
             var td = $(this).find('td').each(function(){
@@ -691,35 +819,36 @@ $script = <<< JS
             
             j++;
           });
-
+*/
           wtable.find('tbody tr td').each(function(){
             if(!isNaN($(this).text())){
-               var tembold = false;
-                  if($(this).innerHTML.indexOf("<b>") != -1){
-                    tembold = true;
-                  }
                 var num = $(this).text();
-
-                //var num = num.toLocaleString('pt-BR');
-                //$(this).text(num);
-                 var numero = num.split('.');
-                 if (numero.length > 1){
+                var numero = num.split('.');
+                if (numero.length > 1){
                   numero[0] = numero[0].split(/(?=(?:...)*$)/).join('.');
                   var num = numero.join(',');
-                 }else{
+                }else{
                   var num = num.split('').reverse().join('').split(/(\d{3})/).filter(Boolean)
     .join('.').split('').reverse().join('');
                  }
 
-                 if (tembold){
-                  var texto = "<b>" + num;
-                  $(this).text(texto);
-                 }else{
-                  var texto = num;
-                  $(this).text(texto);
-                 }
-               
+                $(this).text(num);
+  
           }
+          });
+
+          
+          wtable.find('tbody tr').each(function(){
+            var td = $(this).find('td');
+                var i = 0;
+
+                while (i < td.length){
+                  var str = td[i].innerHTML;
+                  if(td[i].className == 'lp' || td[i].className == 'ap' || td[i].className == 'ao'){
+                      td[i].innerHTML = "<b>"+str;
+                  }
+                  i++;
+                }
           });
 
           $('#showmonth').click(function(){
@@ -737,7 +866,7 @@ $script = <<< JS
 
           $('#showweek').click(function(){
             $.ajax({
-                url:'http://localhost/QSmart/frontend/views/qhiboard/weeklytable.php',
+                url:'?r=qhiboard/week',
                 type:'get',
                 success:function(data){
                   $('#table').html(data);
@@ -762,6 +891,15 @@ if ($lastday = date('d')){
 }
 $position = \yii\web\View::POS_READY;
 $this->registerJs($script, $position);
+$this->registerCss("
+
+th, td{
+  text-align:center;
+  vertical-align:middle;
+  font-size:110%;
+}  
+  ");
+
 
 ?>
 <div class="qhiboard-index">
@@ -779,27 +917,27 @@ $this->registerJs($script, $position);
         <!--
        <table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-bordered table-condensed table-hover">
        <thead>
-        <tr style="text-align: center;">
-         <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >DEC'17 <br> Result</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >DEC'18 <br> Target</th>
-         <th style="vertical-align: middle; text-align: center;" colspan="7" >DEC'18 Result</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Target</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Result</th>
-         <th style="vertical-align: middle; text-align: center;" rowspan="2" >Achievement</th>
+        <tr style="text-align: center; ">
+         <th style="vertical-align: middle; text-align: center; " colspan="3" rowspan="2">KPI</th>
+         <th style="vertical-align: middle; text-align: center; " rowspan="2" >DEC'17 <br> Result</th>
+         <th style="vertical-align: middle; text-align: center; " rowspan="2" >DEC'18 <br> Target</th>
+         <th style="vertical-align: middle; text-align: center; " colspan="7" >DEC'18 Result</th>
+         <th style="vertical-align: middle; text-align: center; " rowspan="2" >Target</th>
+         <th style="vertical-align: middle; text-align: center; " rowspan="2" >Result</th>
+         <th style="vertical-align: middle; text-align: center; " rowspan="2" >Achievement</th>
         </tr>
-        <tr style="text-align: center; vertical-align: middle;">
-         <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W48</td>
-         <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W49</td>
+        <tr style="text-align: center;  vertical-align: middle;">
+         <td style="vertical-align: middle; text-align: center; "width="70px"> <b>W48</td>
+         <td style="vertical-align: middle; text-align: center; "width="70px"> <b>W49</td>
          <td style="vertical-align: middle; text-align: centerlt;"width="70px"> <b>W50</td>
-         <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W51</td>
-         <td style="vertical-align: middle; text-align: center;"width="70px"> <b>W52</td>
-         <td style="vertical-align: middle; text-align: center;"> <b>Acc. </td>
-         <td style="vertical-align: middle; text-align: center;"> <b>YOY</td>
+         <td style="vertical-align: middle; text-align: center; "width="70px"> <b>W51</td>
+         <td style="vertical-align: middle; text-align: center; "width="70px"> <b>W52</td>
+         <td style="vertical-align: middle; text-align: center; "> <b>Acc. </td>
+         <td style="vertical-align: middle; text-align: center; "> <b>YOY</td>
         </tr>
        </thead>
        <tbody>
-        <tr style="text-align: center;">
+        <tr style="text-align: center; ">
          <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
          <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
          <td>Acc. SVC</td>
@@ -813,7 +951,7 @@ $this->registerJs($script, $position);
          <td class="ap">0 </td>
          <td class="impr" style="vertical-align:middle">x% </td>
         </tr>
-        <tr style="text-align: center;" class="FFR">
+        <tr style="text-align: center; " class="FFR">
          <td>W. A. Sales</td>
          <td class="lp"><b>142440  </td>
          <td class="ao"><b></td>
@@ -825,7 +963,7 @@ $this->registerJs($script, $position);
          <td class="ap">0</td>
          <td class="impr" style="vertical-align:center;"></td>
         </tr>
-        <tr  bgColor="#e0e0e0" style="text-align: center;">
+        <tr  bgColor="#e0e0e0" style="text-align: center; ">
          <td bgColor="#e0e0e0">Rate </td>
          <td bgColor="#e0e0e0" class="lp"><b>1.97</td>
          <td bgColor="#e0e0e0" class="ao"><b>1.90</td>
@@ -840,7 +978,7 @@ $this->registerJs($script, $position);
          <td bgColor="#e0e0e0" class="pts" >35 </td>
          <td bgColor="#e0e0e0" class="prctg">0% </td>
         </tr>
-        <tr style="text-align: center;">
+        <tr style="text-align: center; ">
          <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
          <td>Failure cost</td>
          <td class="lp"><b>63.5</td>
@@ -853,7 +991,7 @@ $this->registerJs($script, $position);
          <td class="ap">51.9</td>
          <td class="impr" style="vertical-align:middle"> x%  </td>
         </tr>
-        <tr style="text-align: center;">
+        <tr style="text-align: center; ">
          <td>Sales</td>
          <td class="lp"><b>14528.7</td>
          <td class="ao"><b>13802.3</td>
@@ -865,7 +1003,7 @@ $this->registerJs($script, $position);
          <td class="ap">2980.3</td>
          <td class="impr" style="vertical-align:middle"> 298%  </td>
         </tr>
-        <tr bgcolor="#e0e0e0" style="text-align: center;">
+        <tr bgcolor="#e0e0e0" style="text-align: center; ">
          <td >Rate </td> 
          <td class="lp"><b>0.44</td>
          <td class="ao"><b>0.44</td>
@@ -880,10 +1018,10 @@ $this->registerJs($script, $position);
          <td class="pts" ">4 </td>
          <td class="prctg">0% </td>
         </tr>
-        <tr style="text-align: center;">
+        <tr style="text-align: center; ">
          <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
          <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
-         <td>Poor parts quantity</td>
+         <td>Poor parts Quantity</td>
          <td class="lp"><b>52</td>
          <td class="ao"><b></td>
          <td class="week">24</td>
@@ -894,8 +1032,8 @@ $this->registerJs($script, $position);
          <td class="ap">31</td>
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
-        <tr style="text-align: center;">
-         <td>Production quantity</td>
+        <tr style="text-align: center; ">
+         <td>Production Quantity</td>
          <td class="lp"><b>62688</td>
          <td class="ao"><b></td>
          <td class="week">23164</td>
@@ -906,7 +1044,7 @@ $this->registerJs($script, $position);
          <td class="ap">40174</td>
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
-        <tr style="text-align: center;" bgColor="#e0e0e0">
+        <tr style="text-align: center; " bgColor="#e0e0e0">
          <td bgColor="#e0e0e0" >PPM </td>
          <td bgColor="#e0e0e0" class="lp"><b>830</td>
          <td bgColor="#e0e0e0" class="ao"><b>454</td>
@@ -921,9 +1059,9 @@ $this->registerJs($script, $position);
          <td bgColor="#e0e0e0" class="pts">15</td>
          <td bgColor="#e0e0e0" class="prctg">0%</td>
         </tr>
-        <tr style="text-align: center;">
-        <td rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
-         <td>Defect quantity</td>
+        <tr style="text-align: center; ">
+        <td rowspan="3" style="text-align: center;  vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
+         <td>Defect Quantity</td>
          <td class="lp"><b>131</td>
          <td class="ao"><b></td>
          <td class="week">11</td>
@@ -934,8 +1072,8 @@ $this->registerJs($script, $position);
          <td class="ap">62</td>
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
-        <tr style="text-align: center;">
-         <td>Total production quantity</td>
+        <tr style="text-align: center; ">
+         <td>Total Production Quantity</td>
          <td class="lp"><b>31688</td>
          <td class="ao"><b></td>
          <td class="week">10005</td>
@@ -946,7 +1084,7 @@ $this->registerJs($script, $position);
          <td class="ap">24629</td>
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
-        <tr style="text-align: center;" bgColor="#e0e0e0">
+        <tr style="text-align: center; " bgColor="#e0e0e0">
           <td>PPM</td> 
          <td class="lp"><b>3729</td>
          <td class="ao"><b>4200</td>
@@ -962,8 +1100,8 @@ $this->registerJs($script, $position);
          <td class="prctg">0%</td>
         </tr>
         <tr style="text-align: center">
-        <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
-        <td>Rework quantity</td>
+        <td rowspan="3" style="text-align: center;  vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
+        <td>Rework Quantity</td>
          <td class="lp"><b>70</td>
          <td class="ao"><b></td>
          <td class="week">0</td>
@@ -974,8 +1112,8 @@ $this->registerJs($script, $position);
          <td class="ap">31</td>
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
-        <tr style="text-align: center;">
-          <td>Total production quantity</td>
+        <tr style="text-align: center; ">
+          <td>Total Production Quantity</td>
          <td class="lp"><b>31668</td>
          <td class="ao"><b></td>
          <td class="week">10005</td>
@@ -986,7 +1124,7 @@ $this->registerJs($script, $position);
          <td class="ap">31</td>
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
-        <tr bgColor="#e0e0e0" style="text-align: center;">
+        <tr bgColor="#e0e0e0" style="text-align: center; ">
           <td bgColor="#e0e0e0">PPM</td>
           <td bgColor="#e0e0e0"class="lp"><b>0</td>
           <td bgColor="#e0e0e0" class="ao"><b></td>

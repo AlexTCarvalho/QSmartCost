@@ -374,7 +374,15 @@ class QhiboardController extends Controller
 
 
         $colspan = sizeof($week_total)+2;
-        $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
+        $htm = '
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script type = "text/javascript">
+        $(document).ready(function(){
+          window.location.href=\'#weekly-table\';
+        });
+     </script>
+        
+        <table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
                       <thead>
                 <tr style="text-align: center; font-size:110%;">
                  <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
@@ -477,7 +485,7 @@ class QhiboardController extends Controller
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
-                 <td>Failure cost</td>';
+                 <td>Failure Cost</td>';
                  $htm = $htm.'<td class="lp"><b>'.number_format($fc,1,",",".").'</td>';
                  $htm = $htm.'
                  <td class="ao"><b>60,4</td>
@@ -557,7 +565,7 @@ class QhiboardController extends Controller
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
                  <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
-                 <td>Defect quantity</td>
+                 <td>Defect Quantity</td>
                  <td class="lp"><b>'.$ppq.'</td>
 
                  <td class="ao"><b></td>';
@@ -578,7 +586,7 @@ class QhiboardController extends Controller
                      '.$yoy.'
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                 <td>Production quantity</td>
+                 <td>Production Quantity</td>
                  <td class="lp">';
 
                  $htm = $htm.'<b>'.$tpqPRR.'</td>
@@ -622,7 +630,7 @@ class QhiboardController extends Controller
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
-                 <td>Defect quantity</td>
+                 <td>Defect Quantity</td>
                  <td class="lp"><b>'.$def.'</td>
                  <td class="ao"><b></td>';
                  $soma = 0;
@@ -641,7 +649,7 @@ class QhiboardController extends Controller
                      '.$yoy.'
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                 <td>Total production quantity</td>
+                 <td>Production Quantity</td>
                  <td class="lp"><b>'.$tpqTLDR.'</td>
                  <td class="ao"><b></td>';
                  $soma1 = 0;
@@ -684,7 +692,7 @@ class QhiboardController extends Controller
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%">
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
-                <td>Rework quantity</td>
+                <td>Rework Quantity</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
                  $soma = 0;
@@ -706,7 +714,7 @@ class QhiboardController extends Controller
                      '.$yoy.'
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                  <td>Total production quantity</td>
+                  <td>Production Quantity</td>
                  <td class="lp"><b>'.$tpqIFRR.'</td>
                  <td class="ao"><b></td>';
                  $soma1 = 0;
@@ -760,6 +768,430 @@ class QhiboardController extends Controller
               
               $htm = $htm.'</table>';
               return $htm;
+    }
+
+    public function actionMonth()
+    {
+      function impr1($lp, $ap){
+            if ($lp == 0){
+              if ($ap == 0){
+                $var = 0;
+              }else{
+                $var = -100;
+              }
+            }else{
+              $var = round(($lp-$ap)/$lp*100);
+            }
+            if ($var > 0){
+                $var = '<td class="impr" bgColor = "#32f032" style="color: black; vertical-align:middle"><b>'.$var.'% ↓';
+            }else if ($var >= -10){
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "yellow" style="color: black; vertical-align:middle"><b>'.$var.'% ↑';
+            }else{
+                $var = $var*(-1);
+                $var = '<td class="impr" bgColor = "f00f0f" style="color: white; vertical-align:middle"><b>'.$var.'% ↑';
+            }
+            return $var;
+        }
+
+
+        $year = date('Y');
+        $Y = date('y');
+        $ly = $Y-1;
+        $LY = $year - 1;
+
+        $connection = Yii::$app->getDb();
+
+        $allmonths = [1,2,3,4,5,6,7,8,9,10,11,12];
+
+        $FFRly = array();
+        $FFRLY1 = 0;
+        $FFRLY2 = 0;
+        $FFRpy = array();
+        $FFRPY1 = 0;
+        $FFRPY2 = 0;
+        $FCRly = array();
+        $FCRLY1 = 0;
+        $FCRLY2 = 0;
+        $FCRpy = array();
+        $FCRPY1 = 0;
+        $FCRPY2 = 0;
+        $PRRly = array();
+        $PRRLY1 = 0;
+        $PRRLY2 = 0;
+        $PRRpy = array();
+        $PRRPY1 = 0;
+        $PRRPY2 = 0;
+        $TLDRly = array();
+        $TLDRLY1 = 0;
+        $TLDRLY2 = 0;
+        $TLDRpy = array();
+        $TLDRPY1 = 0;
+        $TLDRPY2 = 0;
+        $IFRRly = array();
+        $IFRRLY1 = 0;
+        $IFRRLY2 = 0;
+        $IFRRpy = array();
+        $IFRRPY1 = 0;
+        $IFRRPY2 = 0;
+        
+        foreach ($allmonths as $month) {
+          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $FFRLY1 += $perk['accsvc'];
+                $FFRLY2 += $perk['waccs'];
+                array_push($FFRly, $perk['rate']);
+                break;
+              }
+        /*
+          $command = $connection->createCommand("SELECT failcost, sales, rate FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $FCRLY1 += $perk['accsvc'];
+                $FCRLY2 += $perk['waccs'];
+                array_push($FCRly, $perk['rate']);
+                break;
+              }
+              */
+          $command = $connection->createCommand("SELECT ppq, prodquant, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $PRRLY1 += $perk['ppq'];
+                $PRRLY2 += $perk['prodquant'];
+                array_push($PRRly, $perk['ppm']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $TLDRLY1 += $perk['defect'];
+                $TLDRLY2 += $perk['tpq'];
+                array_push($TLDRly, $perk['ppm']);
+                break;
+              }
+          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $IFRRLY1 += $perk['rework'];
+                $IFRRLY2 += $perk['tpq'];
+                array_push($IFRRly, $perk['ppm']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $FFRPY1 += $perk['accsvc'];
+                $FFRPY2 += $perk['waccs'];
+                array_push($FFRpy, $perk['rate']);
+                break;
+              }
+        
+          $command = $connection->createCommand("SELECT failcost, sales, rate FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $FCRPY1 += $perk['accsvc'];
+                $FCRPY2 += $perk['waccs'];
+                array_push($FCRpy, $perk['rate']);
+                break;
+              }
+              
+          $command = $connection->createCommand("SELECT ppq, prodquant, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $PRRPY1 += $perk['ppq'];
+                $PRRPY2 += $perk['prodquant'];
+                array_push($PRRpy, $perk['ppm']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $TLDRPY1 += $perk['defect'];
+                $TLDRPY2 += $perk['tpq'];
+                array_push($TLDRpy, $perk['ppm']);
+                break;
+              }
+          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $IFRRPY1 += $perk['rework'];
+                $IFRRPY2 += $perk['tpq'];
+                array_push($IFRRpy, $perk['ppm']);
+                break;
+              }
+        }
+      $htm = '
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script type = "text/javascript">
+        
+        $(document).ready(function(){
+          window.location.href=\'#monthly-table\';
+        });
+     </script>
+    <table href="#" id = "monthly-table" class="table table-striped table-bordered table-condensed table-hover">
+     <thead>
+      <tr style="text-align: center;">
+       <th colspan="3" style="text-align: center; vertical-align: middle;">KPI</th>
+       <th width="80px" style="text-align: center;">Jan</th>
+       <th width="80px" style="text-align: center;">Feb</th>
+       <th width="80px" style="text-align: center;">Mar</th>
+       <th width="80px" style="text-align: center;">Apr</th>
+       <th width="80px" style="text-align: center;">May</th>
+       <th width="80px" style="text-align: center;">Jun</th>
+       <th width="80px" style="text-align: center;">Jul</th>
+       <th width="80px" style="text-align: center;">Aug</th>
+       <th width="80px" style="text-align: center;">Sep</th>
+       <th width="80px" style="text-align: center;">Oct</th>
+       <th width="80px" style="text-align: center;">Nov</th>
+       <th width="80px" style="text-align: center;">Dec</th>
+       <th width="80px" style="text-align: center;">Acc.</th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr style="text-align: center;">
+       <td rowspan="6" style="text-align: center; vertical-align: middle">Market</td>
+       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Field Rate">FFR </td>
+       <td>\''.$ly.'</td>';
+       $restam = 12;
+       foreach ($FFRly as $key) {
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+       $accly = $FFRLY1/$FFRLY2;
+       $htm = $htm.'<td><b></td>';
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($FFRpy as $key) {
+        $soma += $key;
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td>YOY</td>';
+      for ($i=0; $i < sizeof($FFRpy); $i++) {
+        $yoy = impr1($FFRly[$i],$FFRpy[$i]);
+        $htm = $htm.''.$yoy.'';
+      }
+
+      $restam = sizeof($FFRly)-sizeof($FFRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td class="impr"></td>';
+      }
+
+
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;" >
+       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Cost Rate">FCR </td>
+       <td>\''.$ly.'</td>';
+
+       $restam = 12;
+       foreach ($FCRly as $key) {
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($FCRpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td>YOY</td>';
+      for ($i=0; $i < sizeof($FCRpy); $i++) {
+        $yoy = impr1($FCRly[$i],$FCRpy[$i]);
+        $htm = $htm.''.$yoy.'';
+      }
+
+      $restam = sizeof($FCRly)-sizeof($FCRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td class="impr"></td>';
+      }
+
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;" >
+       <td rowspan="9" style="text-align: center; vertical-align: middle">Production</td>
+       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Parts Return Rate">PRR </td>
+       <td>\''.$ly.'</td>';
+
+       $restam = 12;
+       foreach ($PRRly as $key) {
+
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($PRRpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td>YOY</td>';
+      for ($i=0; $i < sizeof($PRRpy); $i++) {
+        $yoy = impr1($PRRly[$i],$PRRpy[$i]);
+        $htm = $htm.''.$yoy.'';
+      }
+
+      $restam = sizeof($PRRly)-sizeof($PRRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td class="impr"></td>';
+      }
+          $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+      <td rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate">TLDR </td>
+       <td>\''.$ly.'</td>';
+
+
+       $restam = 12;
+       foreach ($TLDRly as $key) {
+
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($TLDRpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td>YOY</td>';
+      for ($i=0; $i < sizeof($TLDRpy); $i++) {
+        $yoy = impr1($TLDRly[$i],$TLDRpy[$i]);
+        $htm = $htm.''.$yoy.'';
+      }
+
+      $restam = sizeof($TLDRly)-sizeof($TLDRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td class="impr"></td>';
+      }
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+      <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Return Rate">IFRR </td>
+       <td>\''.$ly.'</td>';
+
+
+       $restam = 12;
+       foreach ($IFRRly as $key) {
+
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($IFRRpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td>YOY</td>';
+      for ($i=0; $i < sizeof($IFRRpy); $i++) {
+        $yoy = impr1($IFRRly[$i],$IFRRpy[$i]);
+        $htm = $htm.''.$yoy.'';
+      }
+
+      $restam = sizeof($IFRRly)-sizeof($IFRRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td class="impr"></td>';
+      }
+
+       $htm = $htm.'
+      </tr>
+     </tbody>
+    </table>';
+    return $htm;
     }
 
     /**

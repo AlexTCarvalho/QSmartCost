@@ -12,6 +12,8 @@ $this->title = 'QHI Board';
 //$this->params['breadcrumbs'][] = $this->title;
 
 $connection = Yii::$app->getDb();
+
+
 function semana_do_ano($dia,$mes,$ano){
 
         $var=intval( date('z', mktime(0,0,0,$mes,$dia,$ano) ) / 7 ) + 1;
@@ -20,13 +22,14 @@ function semana_do_ano($dia,$mes,$ano){
         }
 
         function impr1($lp, $ap){
-            $var = round(($lp-$ap)/$lp*100);
             if ($lp == 0){
               if ($ap == 0){
                 $var = 0;
               }else{
                 $var = -100;
               }
+            }else{
+              $var = round(($lp-$ap)/$lp*100);
             }
             if ($var > 0){
                 $var = '<td class="impr" bgColor = "#32f032" style="color: black; vertical-align:middle"><b>'.$var.'% ↓';
@@ -361,14 +364,13 @@ function semana_do_ano($dia,$mes,$ano){
               for ($i=0; $i < $restam; $i++) { 
                 $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
               }
-
               $p = ($ptsFFR/35)*100;
               $htm = $htm.'
                  <td bgColor="#e0e0e0" class="ap"><b>'.$Acc.'</td>
                  '.$yoy.'
                  <td bgColor="#e0e0e0" class="patt">35</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$p.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">0% </td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFFR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
                 </tr>';
         // AQUI COMEÇA O FCR
                 $fc = 63.5;
@@ -377,7 +379,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
-                 <td>Failure cost</td>
+                 <td>Failure Cost</td>
                  <td class="lp"><b>'.$fc.'</td>
                  <td class="ao"><b>60,4</td>
                  ';
@@ -437,15 +439,15 @@ function semana_do_ano($dia,$mes,$ano){
                  <td class="ap"><b>'.$soma.'</td>
                  '.$yoy.'
                  <td class="patt">20</td>
-                 <td class="pts" ">'.$p.'</td>
-                 <td class="prctg">0% </td>
+                 <td class="pts" ">'.$ptsFCR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
                  <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
-                 <td>Defect quantity</td>
+                 <td>Defect Quantity</td>
                  <td class="lp"><b>'.$ppq.'</td>
 
                  <td class="ao"><b></td>';
@@ -466,7 +468,7 @@ function semana_do_ano($dia,$mes,$ano){
                      '.$yoy.'
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                 <td>Production quantity</td>
+                 <td>Production Quantity</td>
                  <td class="lp">';
 
                  $htm = $htm.'<b>'.$tpqPRR.'</td>
@@ -503,14 +505,14 @@ function semana_do_ano($dia,$mes,$ano){
                      '.$yoy.'
 
                  <td bgColor="#e0e0e0" class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts">'.$p.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">0%</td>
+                 <td bgColor="#e0e0e0" class="pts">'.$ptsPRR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
                 </tr>';
                 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
-                 <td>Defect quantity</td>
+                 <td>Defect Quantity</td>
                  <td class="lp"><b>'.$def.'</td>
                  <td class="ao"><b></td>';
                  $soma = 0;
@@ -529,7 +531,7 @@ function semana_do_ano($dia,$mes,$ano){
                      '.$yoy.'
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                 <td>Total production quantity</td>
+                 <td>Production Quantity</td>
                  <td class="lp"><b>'.$tpqTLDR.'</td>
                  <td class="ao"><b></td>';
                  $soma1 = 0;
@@ -564,15 +566,15 @@ function semana_do_ano($dia,$mes,$ano){
                      <td class="ap"><b>'.$soma.'</td>
                      '.$yoy.'
                  <td class="patt">15</td>
-                 <td class="pts">'.$p.'</td>
-                 <td class="prctg">0%</td>
+                 <td class="pts">'.$ptsTLDR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
         // IFRR começa aqui
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%">
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
-                <td>Rework quantity</td>
+                <td>Rework Quantity</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
                  $soma = 0;
@@ -594,7 +596,7 @@ function semana_do_ano($dia,$mes,$ano){
                      '.$yoy.'
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                  <td>Total production quantity</td>
+                  <td>Production Quantity</td>
                  <td class="lp"><b>'.$tpqIFRR.'</td>
                  <td class="ao"><b></td>';
                  $soma1 = 0;
@@ -633,8 +635,8 @@ function semana_do_ano($dia,$mes,$ano){
                      <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      '.$yoy.'
                   <td bgColor="#e0e0e0"class="patt">15</td>
-                  <td bgColor="#e0e0e0"class="pts">15</td>
-                  <td bgColor="#e0e0e0"class="prctg">100%</td>
+                  <td bgColor="#e0e0e0"class="pts">'.$ptsIFRR.'</td>
+                  <td bgColor="#e0e0e0"class="prctg">'.$p.'%</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
                 <td bgColor="#e0e0e0"colspan = 3>Total</td>
@@ -853,7 +855,7 @@ $script = <<< JS
 
           $('#showmonth').click(function(){
             $.ajax({
-                url:'http://localhost/QSmart/frontend/views/qhiboard/monthlytable.php',
+                url:'?r=qhiboard/month',
                 type:'get',
                 success:function(data){
                   $('#table').html(data);
@@ -1073,7 +1075,7 @@ th, td{
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
         <tr style="text-align: center; ">
-         <td>Total Production Quantity</td>
+         <td>Production Quantity</td>
          <td class="lp"><b>31688</td>
          <td class="ao"><b></td>
          <td class="week">10005</td>
@@ -1113,7 +1115,7 @@ th, td{
          <td class="impr" style="vertical-align:middle"> x% </td>
         </tr>
         <tr style="text-align: center; ">
-          <td>Total Production Quantity</td>
+          <td>Production Quantity</td>
          <td class="lp"><b>31668</td>
          <td class="ao"><b></td>
          <td class="week">10005</td>

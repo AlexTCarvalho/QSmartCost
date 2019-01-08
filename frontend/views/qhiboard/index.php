@@ -183,13 +183,13 @@ function semana_do_ano($dia,$mes,$ano){
                 break;
               }
 
-              $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $rew = $perk['rework'];
                 $tpq = $perk['tpq'];
-                $ppm = $perk['ppm'];
+                $ppm = $perk['rate'];
                 array_push($IFRR1,$rew);
                 array_push($IFRR2,$tpq);
                 array_push($IFRR3,$ppm);
@@ -232,12 +232,12 @@ function semana_do_ano($dia,$mes,$ano){
                 $ppmTLDR = $perk['ppm'];
                 break;
               }
-          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $rew = $perk['rework'];
                 $tpqIFRR = $perk['tpq'];
-                $ppmIFRR = $perk['ppm'];
+                $ppmIFRR = $perk['rate'];
                 break;
               }
 
@@ -334,11 +334,15 @@ function semana_do_ano($dia,$mes,$ano){
                  <td>W. Acc. Sales</td>
                  <td class="lp"><b>'.$waccs.'</td>
                  <td class="ao"><b></td>';
+
+              $insert1 = $Acc;
+
               foreach ($FFR2 as $key) {
                 $htm = $htm.'<td class="week">'.$key.'</td>';
                 $Acc=$key;
               }
               $yoy = impr2($waccs,$Acc);
+              $insert2 = $Acc;
 
               for ($i=0; $i < $restam; $i++) { 
                 $htm = $htm.'<td class="week"></td>';
@@ -360,6 +364,18 @@ function semana_do_ano($dia,$mes,$ano){
               }
               $yoy = impr1($rateFFR,$Acc);
 
+              $insert3 = $Acc;
+              $command = $connection->createCommand("INSERT INTO bd_lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
+                $command->bindValue(':accsvc', $insert1);
+                $command->bindValue(':waccs', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+
+
+
+
               for ($i=0; $i < $restam; $i++) { 
                 $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
               }
@@ -378,8 +394,7 @@ function semana_do_ano($dia,$mes,$ano){
                  <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
                  <td>Failure cost</td>
                  <td class="lp"><b>'.$fc.'</td>
-                 <td class="ao"><b>60,4</td>
-                 ';
+                 <td class="ao"><b>60,4</td>';
 
               $restam = sizeof($week_total);
               $soma = 0;
@@ -444,15 +459,15 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                 <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
-                 <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
-                 <td>Defect Quantity</td>
-                 <td class="lp"><b>'.$ppq.'</td>
+                <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
+                <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
+                <td>Defect Quantity</td>
+                <td class="lp"><b>'.$ppq.'</td>
 
-                 <td class="ao"><b></td>';
+                <td class="ao"><b></td>';
 
-              $restam = sizeof($week_total);
-              $soma = 0;
+                $restam = sizeof($week_total);
+                $soma = 0;
                 foreach ($PRR1 as $key) {
                     $htm = $htm.'<td class="week">'.$key.'</td>';
                     $restam--;
@@ -461,42 +476,54 @@ function semana_do_ano($dia,$mes,$ano){
                 for ($i=0; $i < $restam; $i++) { 
                     $htm = $htm.'<td class="week"></td>';
                 }
+
+                $insert1 = $soma;
                 $yoy = impr1($ppq,$soma);
                 $htm = $htm.'
                      <td class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                 <td>Production Quantity</td>
-                 <td class="lp">';
+                <td>Production Quantity</td>
+                <td class="lp">';
 
-                 $htm = $htm.'<b>'.$tpqPRR.'</td>
-                 <td class="ao"><b></td>';
-                 $soma1 = 0;
-                 foreach ($PRR2 as $key) {
-                   $htm = $htm.'<td class="week">'.$key.'</td>';
-                    $soma1 += $key;
+                $htm = $htm.'<b>'.$tpqPRR.'</td>
+                <td class="ao"><b></td>';
+                $soma1 = 0;
+                foreach ($PRR2 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $soma1 += $key;
                 }
                 for ($i=0; $i < $restam; $i++) { 
                     $htm = $htm.'<td class="week"></td>';
                 }
+
+                $insert2 = $soma1;
                 $yoy = impr2($tpqPRR,$soma1);
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma1.'</td>
-                     <td '.$yoy.'</td>
+                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
+                <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
-                 <td bgColor="#e0e0e0" >PPM</td>
-                 <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
-                 <td bgColor="#e0e0e0" class="ao"><b>454</td>';
+                <td bgColor="#e0e0e0" >PPM</td>
+                <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
+                <td bgColor="#e0e0e0" class="ao"><b>454</td>';
 
 
                 if($soma1 != 0){
                   $soma = round(($soma/$soma1)*1000000);
                 }
 
+                $insert3 = $soma;
+                $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                $command->bindValue(':defect', $insert1);
+                $command->bindValue(':tpq', $insert2);
+                $command->bindValue(':ppm', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+
                  
-                 foreach ($PRR3 as $key) {
+                foreach ($PRR3 as $key) {
                    $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
                 }
                 for ($i=0; $i < $restam; $i++) { 
@@ -504,77 +531,89 @@ function semana_do_ano($dia,$mes,$ano){
                 }
                 $yoy = impr1($ppmPRR,$soma);
                 $p = ($ptsPRR/15)*100;
-                $htm = $htm.'
-                     <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
-                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
-
-                 <td bgColor="#e0e0e0" class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsPRR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                $htm = $htm.'<td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                <td bgColor="#e0e0e0" class="patt">15</td>
+                <td bgColor="#e0e0e0" class="pts" >'.$ptsPRR.'</td>
+                <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
                 </tr>';
                 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
-                 <td>Defect Quantity</td>
-                 <td class="lp"><b>'.$def.'</td>
-                 <td class="ao"><b></td>';
-                 $soma = 0;
-                 $restam = sizeof($week_total);
-                 foreach ($TLDR1 as $key) {
-                   $htm = $htm.'<td class="week">'.$key.'</td>';
-                   $restam--;
-                    $soma += $key;
+                <td>Defect Quantity</td>
+                <td class="lp"><b>'.$def.'</td>
+                <td class="ao"><b></td>';
+                $soma = 0;
+                $restam = sizeof($week_total);
+                foreach ($TLDR1 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $restam--;
+                  $soma += $key;
                 }
                 for ($i=0; $i < $restam; $i++) { 
                     $htm = $htm.'<td class="week"></td>';
                 }
+
+                $insert1 = $soma;
                 $yoy = impr1($def,$soma);
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
-                     <td '.$yoy.'</td>
+                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
+                <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                 <td>Production Quantity</td>
-                 <td class="lp"><b>'.$tpqTLDR.'</td>
-                 <td class="ao"><b></td>';
-                 $soma1 = 0;
+                <td>Production Quantity</td>
+                <td class="lp"><b>'.$tpqTLDR.'</td>
+                <td class="ao"><b></td>';
+                $soma1 = 0;
 
-                 foreach ($TLDR2 as $key) {
-                    $htm = $htm.'<td class="week">'.$key.'</td>';
-                    $soma1 += $key;
+                foreach ($TLDR2 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $soma1 += $key;
                 }
                 for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
+                  $htm = $htm.'<td class="week"></td>';
                 }
                 $yoy = impr2($tpqTLDR,$soma1);
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma1.'</td>
-                     <td '.$yoy.'</td>
+
+                $insert2 = $soma1;
+                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
+                <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
-                  <td>PPM</td>
-                 <td class="lp"><b>'.$ppmTLDR.'</td>
-                 <td class="ao"><b>4200</td>';
+                <td>PPM</td>
+                <td class="lp"><b>'.$ppmTLDR.'</td>
+                <td class="ao"><b>4200</td>';
                  
                 if($soma1 != 0){
                   $soma = round(($soma/$soma1)*1000000);
                 }
 
-                 foreach ($TLDR3 as $key) {
-                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                foreach ($TLDR3 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
                 }
                 for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
+                  $htm = $htm.'<td class="week"></td>';
                 }
+
+                $insert3 = $soma;
+
+                $command = $connection->createCommand("INSERT INTO bd_lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                $command->bindValue(':defect', $insert1);
+                $command->bindValue(':tpq', $insert2);
+                $command->bindValue(':ppm', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+                
+                
+
                 $yoy = impr1($ppmTLDR,$soma);
                 $p = ($ptsTLDR/15)*100;
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
-                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                 <td class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsTLDR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
+                <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                <td class="patt">15</td>
+                <td bgColor="#e0e0e0" class="pts" >'.$ptsTLDR.'</td>
+                <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
                 </tr>';
 
         // IFRR começa aqui
@@ -584,17 +623,19 @@ function semana_do_ano($dia,$mes,$ano){
                 <td>Rework Quantity</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
-                 $soma = 0;
-                 $restam = sizeof($week_total);
-                 foreach ($IFRR1 as $key) {
-                    $htm = $htm.'<td class="week">'.$key.'</td>';
-                    $restam--;
-                    $soma+=$key;
-                 }
+                $soma = 0;
+                $restam = sizeof($week_total);
+                foreach ($IFRR1 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $restam--;
+                  $soma+=$key;
+                }
 
-                 for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
-                 }
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert1 = $soma;
 
                  
                 $yoy = impr1($rew,$soma);
@@ -617,6 +658,8 @@ function semana_do_ano($dia,$mes,$ano){
                  }
 
                 $yoy = impr2($tpqIFRR,$soma1);
+
+                $insert2 = $soma1;
                 $htm = $htm.'
                      <td class="ap"><b>'.$soma1.'</td>
                      <td '.$yoy.'</td>
@@ -627,16 +670,27 @@ function semana_do_ano($dia,$mes,$ano){
                   <td bgColor="#e0e0e0" class="ao"><b>2,45</td>';
                  
                 if($soma1 != 0){
-                  $soma = round(($soma/$soma1)*1000000);
-                } 
-                 foreach ($IFRR3 as $key) {
-                    $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
-                 }
+                  $soma = round(($soma/$soma1)*100,2);
+                }
 
-                 for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
-                 }
-                 $colspan = 2+$colspan-1;
+                $insert3 = $soma;
+                $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                $command->bindValue(':rework', $insert1);
+                $command->bindValue(':tpq', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+
+
+                foreach ($IFRR3 as $key) {
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                $colspan = 2+$colspan-1;
                  
                 $yoy = impr1($ppmIFRR,$soma);
                 $p = ($ptsIFRR/15)*100;
@@ -659,6 +713,8 @@ function semana_do_ano($dia,$mes,$ano){
                </tbody>';
               
               $htm = $htm.'</table>';
+
+
 
 $script = <<< JS
 
@@ -729,16 +785,7 @@ $script = <<< JS
     });
 
 JS;
-if ($lastday = date('d')){
-  $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-      $result = $command->queryAll();
-      foreach ($result as $perk) {
-        $rew = $perk['rework'];
-        $tpqIFRR = $perk['tpq'];
-        $ppmIFRR = $perk['ppm'];
-        break;
-      }
-}
+
 $position = \yii\web\View::POS_READY;
 $this->registerJs($script, $position);
 $this->registerCss("

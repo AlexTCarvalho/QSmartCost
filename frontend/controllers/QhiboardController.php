@@ -277,13 +277,13 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $rew = $perk['rework'];
                 $tpq = $perk['tpq'];
-                $ppm = $perk['ppm'];
+                $ppm = $perk['rate'];
                 array_push($IFRR1,$rew);
                 array_push($IFRR2,$tpq);
                 array_push($IFRR3,$ppm);
@@ -326,12 +326,12 @@ class QhiboardController extends Controller
                 $ppmTLDR = $perk['ppm'];
                 break;
               }
-          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $rew = $perk['rework'];
                 $tpqIFRR = $perk['tpq'];
-                $ppmIFRR = $perk['ppm'];
+                $ppmIFRR = $perk['rate'];
                 break;
               }
 
@@ -928,12 +928,12 @@ class QhiboardController extends Controller
                 array_push($TLDRly, $perk['ppm']);
                 break;
               }
-          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $IFRRLY1 += $perk['rework'];
                 $IFRRLY2 += $perk['tpq'];
-                array_push($IFRRly, $perk['ppm']);
+                array_push($IFRRly, $perk['rate']);
                 break;
               }
 
@@ -972,12 +972,12 @@ class QhiboardController extends Controller
                 array_push($TLDRpy, $perk['ppm']);
                 break;
               }
-          $command = $connection->createCommand("SELECT rework, tpq, ppm FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $IFRRPY1 += $perk['rework'];
                 $IFRRPY2 += $perk['tpq'];
-                array_push($IFRRpy, $perk['ppm']);
+                array_push($IFRRpy, $perk['rate']);
                 break;
               }
         }
@@ -1274,7 +1274,7 @@ class QhiboardController extends Controller
         $htm = $htm.'<td class="ly"><b></td>'; 
        }
 
-        $accly = acc2($IFRRLY1,$IFRRLY2);
+        $accly = acc1($IFRRLY1,$IFRRLY2);
         $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
 
         
@@ -1293,7 +1293,7 @@ class QhiboardController extends Controller
         $htm = $htm.'<td class="py"><b></td>'; 
        }
 
-        $accpy = acc2($IFRRPY1,$IFRRPY2);
+        $accpy = acc1($IFRRPY1,$IFRRPY2);
         $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
 
        $htm = $htm.'

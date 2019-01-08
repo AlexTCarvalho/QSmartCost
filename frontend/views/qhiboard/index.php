@@ -19,7 +19,7 @@ function semana_do_ano($dia,$mes,$ano){
         return $var;
         }
 
-        function impr1($lp, $ap){
+          function impr1($lp, $ap){
             
             if ($lp == 0){
               if ($ap == 0){
@@ -44,7 +44,7 @@ function semana_do_ano($dia,$mes,$ano){
           
         
 
-        function impr2($lp, $ap){
+          function impr2($lp, $ap){
             if ($lp == 0){
               if ($ap == 0){
                 $var = 0;
@@ -64,7 +64,69 @@ function semana_do_ano($dia,$mes,$ano){
                 $var = 'class="impr" style="color: green; vertical-align:middle"><b>'.$var.'% ↑';
             }
             return $var;
-        }
+          }
+
+          function i1($lp, $ap){
+            
+            if ($lp == 0){
+              if ($ap == 0){
+                $var = 0;
+              }else{
+                $var = -100;
+              }
+            }else{
+              $var = round(($lp-$ap)/$lp*100);
+            }
+            return $var;
+          }
+
+          function pts($lp, $y,$cond1,$cond2,$cond3){
+            if ($lp >= $cond1){
+              if ($y > 24) {
+                return 5;
+              }elseif ($y > 16) {
+                return 4;
+              }elseif ($y > 8) {
+                return 3;
+              }elseif ($y > 0) {
+                return 2;
+              }else{
+                return 1;
+              }
+            }elseif ($lp >= $cond2){
+              if ($y > 18) {
+                return 5;
+              }elseif ($y > 12) {
+                return 4;
+              }elseif ($y > 6) {
+                return 3;
+              }elseif ($y > 0) {
+                return 2;
+              }else{
+                return 1;
+              }
+            }elseif ($lp >= $cond3) {
+              if ($y > 9) {
+                return 5;
+              }elseif ($y > 5) {
+                return 4;
+              }elseif ($y > 3) {
+                return 3;
+              }elseif ($y > 0) {
+                return 2;
+              }else{
+                return 1;
+              }
+            }else{
+              if ($y >= 5) {
+                return 5;
+              }elseif ($y >= 0) {
+                return 4;
+              }else{
+                return 1;
+              }
+            }
+          }
 
 
         $week = semana_do_ano(date('d'),date('m'),date('Y'));
@@ -363,7 +425,9 @@ function semana_do_ano($dia,$mes,$ano){
                 $Acc=$key;
               }
               $yoy = impr1($rateFFR,$Acc);
-
+              $y = i1($rateFFR,$insert2)
+              $ptsFFR = pts($insert2, $y, 10, 5, 2);
+              $ptsFFR = ($ptsFFR/5)*35;
               $insert3 = $Acc;
               $command = $connection->createCommand("INSERT INTO bd_lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
                 $command->bindValue(':accsvc', $insert1);
@@ -447,6 +511,19 @@ function semana_do_ano($dia,$mes,$ano){
                 $soma = round($soma/$soma1*100,2);
               }
               $yoy = impr1($rateFCR,$soma);
+              $y = i1($rateFCR,$insert2);
+              $ptsFCR = 
+              if ($y >= 2) $ptsFCR = 5;
+              elseif ($y >= 1) $ptsFCR = 4;
+              elseif ($y >= 0) $ptsFCR = 3;
+              elseif ($y >= -1) $ptsFCR =  2;
+              else $ptsFCR =  1;
+              /*IF IMPR >= 2% return 5;
+ELSE IF IMPR >= 1% return 4;
+ELSE IF IMPR >= 0% return 3;
+ELSE IF IMPR >= -1% return 2;
+ELSE return 1;*/
+              $ptsFCR = ($ptsFCR/5)*35;
 
                 $p = ($ptsFCR/20)*100;
                 $htm = $htm.'

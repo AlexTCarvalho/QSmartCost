@@ -163,6 +163,71 @@ class QhiboardController extends Controller
             return $var;
         }
 
+        function i1($lp, $ap){
+            
+            if ($lp == 0){
+              if ($ap == 0){
+                $var = 0;
+              }else{
+                $var = -100;
+              }
+            }else{
+              $var = round(($lp-$ap)/$lp*100);
+            }
+            return $var;
+          }
+
+          function pts($lp, $y,$cond1,$cond2,$cond3){
+            if ($lp >= $cond1){
+              if ($y >= 24) {
+                return 5;
+              }elseif ($y >= 16) {
+                return 4;
+              }elseif ($y >= 8) {
+                return 3;
+              }elseif ($y >= 0) {
+                return 2;
+              }else{
+                return 1;
+              }
+            }elseif ($lp >= $cond2){
+              if ($y >= 18) {
+                return 5;
+              }elseif ($y >= 12) {
+                return 4;
+              }elseif ($y >= 6) {
+                return 3;
+              }elseif ($y >= 0) {
+                return 2;
+              }else{
+                return 1;
+              }
+            }elseif ($lp >= $cond3) {
+              if ($y >= 9) {
+                return 5;
+              }elseif ($y >= 5) {
+                return 4;
+              }elseif ($y >= 3) {
+                return 3;
+              }elseif ($y >= 0) {
+                return 2;
+              }else{
+                return 1;
+              }
+            }elseif ($lp == 0 && $y == 0) {
+              return 5;
+            }
+            else{
+              if ($y >= 5) {
+                return 5;
+              }elseif ($y >= 0) {
+                return 4;
+              }else{
+                return 1;
+              }
+            }
+          }
+
         $week = semana_do_ano(date('d'),date('m'),date('Y'));
         $month = date('m');
         $M = strtoupper(date('M'));
@@ -209,21 +274,11 @@ class QhiboardController extends Controller
                       $week_total = array_unique($week_total);
                       
 
-        $FFR1 = array();
-        $FFR2 = array();
-        $FFR3 = array();
-        $FCR1 = array();
-        $FCR2 = array();
-        $FCR3 = array();
-        $PRR1 = array();
-        $PRR2 = array();
-        $PRR3 = array();
-        $TLDR1 = array();
-        $TLDR2 = array();
-        $TLDR3 = array();
-        $IFRR1 = array();
-        $IFRR2 = array();
-        $IFRR3 = array();
+        $FFR1 = array(); $FFR2 = array(); $FFR3 = array();
+        $FCR1 = array(); $FCR2 = array(); $FCR3 = array();
+        $PRR1 = array(); $PRR2 = array(); $PRR3 = array();
+        $TLDR1 = array(); $TLDR2 = array(); $TLDR3 = array();
+        $IFRR1 = array(); $IFRR2 = array(); $IFRR3 = array();
 
         foreach ($week_total as $key) {
 
@@ -334,39 +389,6 @@ class QhiboardController extends Controller
                 $ppmIFRR = $perk['rate'];
                 break;
               }
-
-          $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'FFR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsFFR = $perk['result'];
-                break;
-              }
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'FCR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsFCR = $perk['result'];
-                break;
-              }
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'PRR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsPRR = $perk['result'];
-                break;
-              }
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'TLDR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsTLDR = $perk['result'];
-                break;
-            }
-
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'IFRR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsIFRR = $perk['result'];
-                break;
-            }
-
 
         $colspan = sizeof($week_total)+2;
         $htm = "
@@ -500,7 +522,9 @@ class QhiboardController extends Controller
               for ($i=0; $i < $restam; $i++) { 
                 $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
               }
-
+              $y = i1($rateFFR,$Acc);
+              $ptsFFR = pts($rateFFR, $y, 10, 5, 2);
+              $ptsFFR = ($ptsFFR/5)*35;
               $p = ($ptsFFR/35)*100;
               $htm = $htm.'
                  <td bgColor="#e0e0e0" class="ap"><b>'.$Acc.'</td>
@@ -573,6 +597,14 @@ class QhiboardController extends Controller
                 $soma = round($soma/$soma1*100,2);
               }
               $yoy = impr1($rateFCR,$soma);
+              $y = i1($rateFCR,$soma);
+              
+              if ($y >= 2) $ptsFCR = 5;
+              elseif ($y >= 1) $ptsFCR = 4;
+              elseif ($y >= 0) $ptsFCR = 3;
+              elseif ($y >= -1) $ptsFCR =  2;
+              else $ptsFCR =  1;
+              $ptsFCR = ($ptsFCR/5)*20;
 
                 $p = ($ptsFCR/20)*100;
                 $htm = $htm.'
@@ -589,7 +621,6 @@ class QhiboardController extends Controller
                  <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
                  <td>Defect Quantity</td>
                  <td class="lp"><b>'.$ppq.'</td>
-
                  <td class="ao"><b></td>';
 
               $restam = sizeof($week_total);
@@ -641,6 +672,9 @@ class QhiboardController extends Controller
                     $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
                 }
                 $yoy = impr1($ppmPRR,$soma);
+                $y = i1($ppmPRR,$soma);
+                $ptsPRR = pts($ppmPRR, $y, 5000, 3000, 1000);
+                $ptsPRR = ($ptsPRR/5)*15;
                 $p = ($ptsPRR/15)*100;
                 $htm = $htm.'
                      <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
@@ -706,6 +740,9 @@ class QhiboardController extends Controller
                     $htm = $htm.'<td class="week"></td>';
                 }
                 $yoy = impr1($ppmTLDR,$soma);
+                $y = i1($ppmTLDR,$soma);
+                $ptsTLDR = pts($ppmTLDR, $y, 10000, 5000, 2000);
+                $ptsTLDR = ($ptsTLDR/5)*15;
                 $p = ($ptsTLDR/15)*100;
                 $htm = $htm.'
                      <td class="ap"><b>'.$soma.'</td>
@@ -777,6 +814,9 @@ class QhiboardController extends Controller
                  $colspan = 2+$colspan-1;
                  
                 $yoy = impr1($ppmIFRR,$soma);
+                $y = i1($ppmIFRR,$soma);
+                $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
+                $ptsIFRR = ($ptsIFRR/5)*15;
                 $p = ($ptsIFRR/15)*100;
                 $somarates = $ptsFFR+$ptsFCR+$ptsPRR+$ptsTLDR+$ptsIFRR;
                 $htm = $htm.'

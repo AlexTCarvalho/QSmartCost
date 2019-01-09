@@ -82,42 +82,45 @@ function semana_do_ano($dia,$mes,$ano){
 
           function pts($lp, $y,$cond1,$cond2,$cond3){
             if ($lp >= $cond1){
-              if ($y > 24) {
+              if ($y >= 24) {
                 return 5;
-              }elseif ($y > 16) {
+              }elseif ($y >= 16) {
                 return 4;
-              }elseif ($y > 8) {
+              }elseif ($y >= 8) {
                 return 3;
-              }elseif ($y > 0) {
+              }elseif ($y >= 0) {
                 return 2;
               }else{
                 return 1;
               }
             }elseif ($lp >= $cond2){
-              if ($y > 18) {
+              if ($y >= 18) {
                 return 5;
-              }elseif ($y > 12) {
+              }elseif ($y >= 12) {
                 return 4;
-              }elseif ($y > 6) {
+              }elseif ($y >= 6) {
                 return 3;
-              }elseif ($y > 0) {
+              }elseif ($y >= 0) {
                 return 2;
               }else{
                 return 1;
               }
             }elseif ($lp >= $cond3) {
-              if ($y > 9) {
+              if ($y >= 9) {
                 return 5;
-              }elseif ($y > 5) {
+              }elseif ($y >= 5) {
                 return 4;
-              }elseif ($y > 3) {
+              }elseif ($y >= 3) {
                 return 3;
-              }elseif ($y > 0) {
+              }elseif ($y >= 0) {
                 return 2;
               }else{
                 return 1;
               }
-            }else{
+            }elseif ($lp == 0 && $y == 0) {
+              return 5;
+            }
+            else{
               if ($y >= 5) {
                 return 5;
               }elseif ($y >= 0) {
@@ -302,40 +305,6 @@ function semana_do_ano($dia,$mes,$ano){
                 $ppmIFRR = $perk['rate'];
                 break;
               }
-
-          $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'FFR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsFFR = $perk['result'];
-                break;
-              }
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'FCR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsFCR = $perk['result'];
-                break;
-              }
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'PRR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsPRR = $perk['result'];
-                break;
-              }
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'TLDR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsTLDR = $perk['result'];
-                break;
-            }
-
-            $command = $connection->createCommand("SELECT result FROM bd_lg.qhi_results WHERE rate = 'IFRR' ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $ptsIFRR = $perk['result'];
-                break;
-            }
-
-
         $colspan = sizeof($week_total)+2;
         $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
                       <thead>
@@ -425,9 +394,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $Acc=$key;
               }
               $yoy = impr1($rateFFR,$Acc);
-              $y = i1($rateFFR,$insert2)
-              $ptsFFR = pts($insert2, $y, 10, 5, 2);
-              $ptsFFR = ($ptsFFR/5)*35;
+
               $insert3 = $Acc;
               $command = $connection->createCommand("INSERT INTO bd_lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
                 $command->bindValue(':accsvc', $insert1);
@@ -438,6 +405,9 @@ function semana_do_ano($dia,$mes,$ano){
                 $sql_result = $command->execute();
 
 
+              $y = i1($rateFFR,$Acc);
+              $ptsFFR = pts($rateFFR, $y, 10, 5, 2);
+              $ptsFFR = ($ptsFFR/5)*35;
 
 
               for ($i=0; $i < $restam; $i++) { 
@@ -511,19 +481,14 @@ function semana_do_ano($dia,$mes,$ano){
                 $soma = round($soma/$soma1*100,2);
               }
               $yoy = impr1($rateFCR,$soma);
-              $y = i1($rateFCR,$insert2);
-              $ptsFCR = 
+              $y = i1($rateFCR,$soma);
+              
               if ($y >= 2) $ptsFCR = 5;
               elseif ($y >= 1) $ptsFCR = 4;
               elseif ($y >= 0) $ptsFCR = 3;
               elseif ($y >= -1) $ptsFCR =  2;
               else $ptsFCR =  1;
-              /*IF IMPR >= 2% return 5;
-ELSE IF IMPR >= 1% return 4;
-ELSE IF IMPR >= 0% return 3;
-ELSE IF IMPR >= -1% return 2;
-ELSE return 1;*/
-              $ptsFCR = ($ptsFCR/5)*35;
+              $ptsFCR = ($ptsFCR/5)*20;
 
                 $p = ($ptsFCR/20)*100;
                 $htm = $htm.'
@@ -591,6 +556,8 @@ ELSE return 1;*/
                 }
 
                 $insert3 = $soma;
+                
+
                 $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
                 $command->bindValue(':defect', $insert1);
                 $command->bindValue(':tpq', $insert2);
@@ -607,7 +574,12 @@ ELSE return 1;*/
                     $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
                 }
                 $yoy = impr1($ppmPRR,$soma);
+                $y = i1($ppmPRR,$soma);
+                $ptsPRR = pts($ppmPRR, $y, 5000, 3000, 1000);
+                $ptsPRR = ($ptsPRR/5)*15;
                 $p = ($ptsPRR/15)*100;
+
+
                 $htm = $htm.'<td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
                 <td bgColor="#e0e0e0" class="patt">15</td>
@@ -685,6 +657,9 @@ ELSE return 1;*/
                 
 
                 $yoy = impr1($ppmTLDR,$soma);
+                $y = i1($ppmTLDR,$soma);
+                $ptsTLDR = pts($ppmTLDR, $y, 10000, 5000, 2000);
+                $ptsTLDR = ($ptsTLDR/5)*15;
                 $p = ($ptsTLDR/15)*100;
                 $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
@@ -770,6 +745,9 @@ ELSE return 1;*/
                 $colspan = 2+$colspan-1;
                  
                 $yoy = impr1($ppmIFRR,$soma);
+                $y = i1($ppmIFRR,$soma);
+                $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
+                $ptsIFRR = ($ptsIFRR/5)*15;
                 $p = ($ptsIFRR/15)*100;
                 $somarates = $ptsFFR+$ptsFCR+$ptsPRR+$ptsTLDR+$ptsIFRR;
                 $htm = $htm.'

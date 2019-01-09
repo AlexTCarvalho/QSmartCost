@@ -131,13 +131,11 @@ function semana_do_ano($dia,$mes,$ano){
             }
           }
 
-
         $week = semana_do_ano(date('d'),date('m'),date('Y'));
         $month = date('m');
         $M = strtoupper(date('M'));
         $year = date('Y');
         $Y = date('y');
-
         $ly = $Y-1;
         $LY = $year - 1;
 
@@ -180,21 +178,11 @@ function semana_do_ano($dia,$mes,$ano){
                       $week_total = array_unique($week_total);
                       
 
-        $FFR1 = array();
-        $FFR2 = array();
-        $FFR3 = array();
-        $FCR1 = array();
-        $FCR2 = array();
-        $FCR3 = array();
-        $PRR1 = array();
-        $PRR2 = array();
-        $PRR3 = array();
-        $TLDR1 = array();
-        $TLDR2 = array();
-        $TLDR3 = array();
-        $IFRR1 = array();
-        $IFRR2 = array();
-        $IFRR3 = array();
+        $FFR1 = array(); $FFR2 = array(); $FFR3 = array();
+        $FCR1 = array(); $FCR2 = array(); $FCR3 = array();
+        $PRR1 = array(); $PRR2 = array(); $PRR3 = array();
+        $TLDR1 = array(); $TLDR2 = array(); $TLDR3 = array();
+        $IFRR1 = array(); $IFRR2 = array(); $IFRR3 = array();
 
         foreach ($week_total as $key) {
 
@@ -305,6 +293,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $ppmIFRR = $perk['rate'];
                 break;
               }
+          
         $colspan = sizeof($week_total)+2;
         $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
                       <thead>
@@ -396,13 +385,25 @@ function semana_do_ano($dia,$mes,$ano){
               $yoy = impr1($rateFFR,$Acc);
 
               $insert3 = $Acc;
-              $command = $connection->createCommand("INSERT INTO bd_lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
+              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ffr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.ffr_acc SET accsvc=".$insert1.",waccs=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                $command = $connection->createCommand("INSERT INTO bd_lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
                 $command->bindValue(':accsvc', $insert1);
                 $command->bindValue(':waccs', $insert2);
                 $command->bindValue(':rate', $insert3);
                 $command->bindValue(':month', $month);
                 $command->bindValue(':year', $year);
                 $sql_result = $command->execute();
+              }
+                
 
 
               $y = i1($rateFFR,$Acc);
@@ -437,7 +438,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $restam--;
                 $soma += $key;
               }
-
+              $insert1 = $soma;
               $yoy = impr1($fc,$soma);
 
               for ($i=0; $i < $restam; $i++) { 
@@ -457,6 +458,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $htm = $htm.'<td class="week">'.$key.'</td>';
                 $soma1 += $key;
               }
+              $insert2 = $soma1;
               
               for ($i=0; $i < $restam; $i++) { 
                 $htm = $htm.'<td class="week"></td>';
@@ -479,6 +481,26 @@ function semana_do_ano($dia,$mes,$ano){
               }
               if($soma1 != 0){
                 $soma = round($soma/$soma1*100,2);
+              }
+              $insert3 = $soma;
+
+              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
+                $command->bindValue(':fail', $insert1);
+                $command->bindValue(':sales', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
               }
               $yoy = impr1($rateFCR,$soma);
               $y = i1($rateFCR,$soma);
@@ -556,15 +578,25 @@ function semana_do_ano($dia,$mes,$ano){
                 }
 
                 $insert3 = $soma;
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command->bindValue(':defect', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':ppm', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
                 
-
-                $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
-                $command->bindValue(':defect', $insert1);
-                $command->bindValue(':tpq', $insert2);
-                $command->bindValue(':ppm', $insert3);
-                $command->bindValue(':month', $month);
-                $command->bindValue(':year', $year);
-                $sql_result = $command->execute();
 
                  
                 foreach ($PRR3 as $key) {
@@ -646,15 +678,24 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $insert3 = $soma;
 
-                $command = $connection->createCommand("INSERT INTO bd_lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
-                $command->bindValue(':defect', $insert1);
-                $command->bindValue(':tpq', $insert2);
-                $command->bindValue(':ppm', $insert3);
-                $command->bindValue(':month', $month);
-                $command->bindValue(':year', $year);
-                $sql_result = $command->execute();
-                
-                
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.tldr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm= ".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command->bindValue(':defect', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':ppm', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute(); 
+                }
 
                 $yoy = impr1($ppmTLDR,$soma);
                 $y = i1($ppmTLDR,$soma);
@@ -726,14 +767,26 @@ function semana_do_ano($dia,$mes,$ano){
                 }
 
                 $insert3 = $soma;
-                $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
-                $command->bindValue(':rework', $insert1);
-                $command->bindValue(':tpq', $insert2);
-                $command->bindValue(':rate', $insert3);
-                $command->bindValue(':month', $month);
-                $command->bindValue(':year', $year);
-                $sql_result = $command->execute();
 
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                  $command->bindValue(':rework', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':rate', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                  
 
                 foreach ($IFRR3 as $key) {
                   $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';

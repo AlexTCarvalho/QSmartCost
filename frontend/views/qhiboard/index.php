@@ -23,7 +23,7 @@ function semana_do_ano($dia,$mes,$ano){
             
             if ($lp == 0){
               if ($ap == 0){
-                $var = 0;
+                $var = 100;
               }else{
                 $var = -100;
               }
@@ -47,7 +47,7 @@ function semana_do_ano($dia,$mes,$ano){
           function impr2($lp, $ap){
             if ($lp == 0){
               if ($ap == 0){
-                $var = 0;
+                $var = -100;
               }else{
                 $var = 100;
               }
@@ -295,11 +295,13 @@ function semana_do_ano($dia,$mes,$ano){
               }
           
         $colspan = sizeof($week_total)+2;
+        $Acc = 0;
         $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
                       <thead>
-                <tr style="text-align: center; font-size:110%;">
-                 <th style="vertical-align: middle; text-align: center;" colspan="3" rowspan="2">KPI</th>
-
+                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                 <th style="vertical-align: middle; text-align: center;" rowspan=2>Division</th>
+                 <th style="vertical-align: middle; text-align: center;" rowspan=2>Domain</th>
+                 <th style="vertical-align: middle; text-align: center;" rowspan=2 colspan=2>Index</th>
                  ';
                       $htm = $htm.'<th style="vertical-align: middle; text-align: center;" rowspan="2" >' . $M .'';
 
@@ -312,19 +314,733 @@ function semana_do_ano($dia,$mes,$ano){
                 </tr>
                 ';
 
+                $htm = $htm.'<tr bgcolor="#e0e0e0">';
+
                 foreach ($week_total as $key) {
-                  $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="70px"> <b>W'.$key.'</td>';
+                  $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="80px"> <b>W'.$key.'</td>';
                 }
 
                 $htm = $htm.'
 
-                 <td style="vertical-align: middle; text-align: center;"> <b>Acc. </td>
-                 <td style="vertical-align: middle; text-align: center;"> <b>YOY</td>
+                 <td style="vertical-align: middle; text-align: center;"width="80px"> <b>Acc. </td>
+                 <td style="vertical-align: middle; text-align: center;"width="80px"> <b>YOY</td>
                 </tr>
-                </thead>
+                </thead>';
+
+                $htm = $htm.'
                 <tbody>
                 <tr style="text-align: center; font-size:110%;">
-                 <td rowspan="6" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
+                 <td rowspan="20" style="vertical-align: middle">Process Index</td>
+                 <td rowspan="6" style="vertical-align: middle" >IQC</td>
+                 <td rowspan="3" style="vertical-align: middle" >PRR</td>
+                 <td>Defect Quantity</td>
+                <td class="lp"><b>'.$ppq.'</td>
+
+                <td class="ao"><b></td>';
+
+                $restam = sizeof($week_total);
+                $soma = 0;
+                foreach ($PRR1 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $restam--;
+                    $soma += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert1 = $soma;
+                $yoy = impr1($ppq,$soma);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                <td>Production Quantity</td>
+                <td class="lp">';
+
+                $htm = $htm.'<b>'.$tpqPRR.'</td>
+                <td class="ao"><b></td>';
+                $soma1 = 0;
+                foreach ($PRR2 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $soma1 += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert2 = $soma1;
+                $yoy = impr2($tpqPRR,$soma1);
+                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
+                <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                <td bgColor="#e0e0e0" >PPM</td>
+                <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
+                <td bgColor="#e0e0e0" class="ao"><b>454</td>';
+
+
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*1000000);
+                }
+
+                $insert3 = $soma;
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command->bindValue(':defect', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':ppm', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                
+
+                 
+                foreach ($PRR3 as $key) {
+                   $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                $yoy = impr1($ppmPRR,$soma);
+                $y = i1($ppmPRR,$soma);
+                $ptsPRR = pts($ppmPRR, $y, 5000, 3000, 1000);
+                $ptsPRR = ($ptsPRR/5)*15;
+                $p = ($ptsPRR/15)*100;
+
+
+                $htm = $htm.'<td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                <td '.$yoy.'</td>
+                <td class="patt">15</td>
+                <td class="pts" >'.$ptsPRR.'</td>
+                <td class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%;">
+                 <td rowspan="3" style="vertical-align: middle">LRR</td>
+                 <td>Lot NG</td>
+                <td class="lp"><b>'.$ppq.'</td>
+
+                <td class="ao"><b></td>';
+
+                $restam = sizeof($week_total);
+                $soma = 0;
+                foreach ($PRR1 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $restam--;
+                    $soma += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert1 = $soma;
+                $yoy = impr1($ppq,$soma);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                <td>Lot Received</td>
+                <td class="lp">';
+
+                $htm = $htm.'<b>'.$tpqPRR.'</td>
+                <td class="ao"><b></td>';
+                $soma1 = 0;
+                foreach ($PRR2 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $soma1 += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert2 = $soma1;
+                $yoy = impr2($tpqPRR,$soma1);
+                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
+                <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                <td bgColor="#e0e0e0" >Rate</td>
+                <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
+                <td bgColor="#e0e0e0" class="ao"><b>454</td>';
+
+
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*1000000);
+                }
+
+                $insert3 = $soma;
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command->bindValue(':defect', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':ppm', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                
+
+                 
+                foreach ($PRR3 as $key) {
+                   $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                $yoy = impr1($ppmPRR,$soma);
+                $y = i1($ppmPRR,$soma);
+                $ptsPRR = pts($ppmPRR, $y, 5000, 3000, 1000);
+                $ptsPRR = ($ptsPRR/5)*15;
+                $p = ($ptsPRR/15)*100;
+
+
+                $htm = $htm.'<td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                <td '.$yoy.'</td>
+                <td class="patt">15</td>
+                <td class="pts" >'.$ptsPRR.'</td>
+                <td class="prctg">'.$p.'%</td>
+                </tr>';
+
+        // AQUI COMEÇA O FCR
+                $htm = $htm.'
+                <tr style="text-align: center; vertical-align: middle; font-size:110%;">
+                <td style="vertical-align: middle;" bgColor="#e0e0e0" rowspan="7">LQC</td>';
+
+                $htm = $htm.'
+                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
+                <td>Defect Quantity</td>
+                <td class="lp"><b>'.$def.'</td>
+                <td class="ao"><b></td>';
+                $soma = 0;
+                $restam = sizeof($week_total);
+                foreach ($TLDR1 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $restam--;
+                  $soma += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert1 = $soma;
+                $yoy = impr1($def,$soma);
+                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
+                <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                <td>Production Quantity</td>
+                <td class="lp"><b>'.$tpqTLDR.'</td>
+                <td class="ao"><b></td>';
+                $soma1 = 0;
+
+                foreach ($TLDR2 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $soma1 += $key;
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td class="week"></td>';
+                }
+                $yoy = impr2($tpqTLDR,$soma1);
+
+                $insert2 = $soma1;
+                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
+                <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
+                <td>PPM</td>
+                <td class="lp"><b>'.$ppmTLDR.'</td>
+                <td class="ao"><b>4200</td>';
+                 
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*1000000);
+                }
+
+                foreach ($TLDR3 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                }
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert3 = $soma;
+
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.tldr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm= ".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command->bindValue(':defect', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':ppm', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute(); 
+                }
+
+                $yoy = impr1($ppmTLDR,$soma);
+                $y = i1($ppmTLDR,$soma);
+                $ptsTLDR = pts($ppmTLDR, $y, 10000, 5000, 2000);
+                $ptsTLDR = ($ptsTLDR/5)*15;
+                $p = ($ptsTLDR/15)*100;
+                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
+                <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                <td class="patt">15</td>
+                <td bgColor="#e0e0e0" class="pts" >'.$ptsTLDR.'</td>
+                <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%">
+                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
+                <td>Rework Quantity</td>
+                 <td class="lp"><b>'.$rew.'</td>
+                 <td class="ao"><b></td>';
+                $soma = 0;
+                $restam = sizeof($week_total);
+                foreach ($IFRR1 as $key) {
+                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $restam--;
+                  $soma+=$key;
+                }
+
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td class="week"></td>';
+                }
+
+                $insert1 = $soma;
+
+                 
+                $yoy = impr1($rew,$soma);
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                  <td>Production Quantity</td>
+                 <td class="lp"><b>'.$tpqIFRR.'</td>
+                 <td class="ao"><b></td>';
+                 $soma1 = 0;
+                 foreach ($IFRR2 as $key) {
+                    $htm = $htm.'<td class="week">'.$key.'</td>';
+                    $soma1+=$key;
+                 }
+
+                 for ($i=0; $i < $restam; $i++) { 
+                    $htm = $htm.'<td class="week"></td>';
+                 }
+
+                $yoy = impr2($tpqIFRR,$soma1);
+
+                $insert2 = $soma1;
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma1.'</td>
+                     <td '.$yoy.'</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
+                  <td bgColor="#e0e0e0">PPM</td>
+                  <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
+                  <td bgColor="#e0e0e0" class="ao"><b>2,45</td>';
+                 
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*100,2);
+                }
+
+                $insert3 = $soma;
+
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                  $command->bindValue(':rework', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':rate', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                  
+
+                foreach ($IFRR3 as $key) {
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                 
+                $yoy = impr1($ppmIFRR,$soma);
+                $y = i1($ppmIFRR,$soma);
+                $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
+                $ptsIFRR = ($ptsIFRR/5)*15;
+                $p = ($ptsIFRR/15)*100;
+                $htm = $htm.'
+                     <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                  <td bgColor="#e0e0e0"class="patt">15</td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$ptsIFRR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
+                  <td bgColor="#e0e0e0">Line Stop Qty</td>
+                  <td bgColor="#e0e0e0">Qty Line Stop QA</td>
+                  <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
+                  <td bgColor="#e0e0e0" class="ao"><b>0</td>';
+                 
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*100,2);
+                }
+
+                $insert3 = $soma;
+
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                  $command->bindValue(':rework', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':rate', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                  
+
+                foreach ($IFRR3 as $key) {
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                 
+                $yoy = impr1($ppmIFRR,$soma);
+                $y = i1($ppmIFRR,$soma);
+                $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
+                $ptsIFRR = ($ptsIFRR/5)*15;
+                $p = ($ptsIFRR/15)*100;
+                $htm = $htm.'
+                     <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                  <td bgColor="#e0e0e0"class="patt">15</td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$ptsIFRR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+
+                <tr style="text-align: center; font-size:110%";>
+                <td style="vertical-align: middle;" bgColor="#e0e0e0" rowspan="3">OQC</td>
+                <td style="vertical-align: middle;" bgColor="#e0e0e0" rowspan="3">NGC Sample Rate</td>
+                ';
+
+
+                $htm = $htm.'
+                <td style="vertical-align: middle;" >NG Lot</td>
+                <td class="lp"><b>'.$fc.'</td>
+                <td class="ao"><b>60,4</td>';
+
+              $restam = sizeof($week_total);
+              $soma = 0;
+              foreach ($FCR1 as $key) {
+                $htm = $htm.'<td class="week">'.$key."</td>";
+                $restam--;
+                $soma += $key;
+              }
+              $insert1 = $soma;
+              $yoy = impr1($fc,$soma);
+
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+              $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                 <td>Total Lot Inspection</td>
+                 <td class="lp"><b>'.$sales.'</td>
+                 <td class="ao"><b>13802</td>';
+                 $soma1 = 0;
+              foreach ($FCR2 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $soma1 += $key;
+              }
+              $insert2 = $soma1;
+              
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+              $yoy = impr2($sales,$soma1);
+                 $htm = $htm.'
+                 <td class="ap"><b>'.$soma1.'</td>
+                 <td '.$yoy.'</td>
+                </tr>
+                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                 <td >Rate </td>
+                 <td class="lp"><b>'.$rateFCR.'</td>
+                 <td class="ao"><b>0.44</td>';
+              foreach ($FCR3 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+              }
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+              if($soma1 != 0){
+                $soma = round($soma/$soma1*100,2);
+              }
+              $insert3 = $soma;
+
+              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
+                $command->bindValue(':fail', $insert1);
+                $command->bindValue(':sales', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+              }
+              $yoy = impr1($rateFCR,$soma);
+              $y = i1($rateFCR,$soma);
+              
+              if ($y >= 2) $ptsFCR = 5;
+              elseif ($y >= 1) $ptsFCR = 4;
+              elseif ($y >= 0) $ptsFCR = 3;
+              elseif ($y >= -1) $ptsFCR =  2;
+              else $ptsFCR =  1;
+              $ptsFCR = ($ptsFCR/5)*20;
+
+                $p = ($ptsFCR/20)*100;
+                $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                 <td class="patt">20</td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                  <td rowspan="4" style="vertical-align: middle;>Common</td>
+                  <td rowspan="3" style="vertical-align: middle;"title="Failure Cost Rate" bgcolor="#e0e0e0">Common </td>
+                  
+                  ';
+
+                $htm = $htm.'
+                  <td rowspan="3" style="vertical-align: middle;">Temporary Workers Rate</td>
+                  <td style="vertical-align: middle;">Temporary Quantity</td>
+                  <td class="lp"><b>'.$fc.'</td>
+                  <td class="ao"><b></td>';
+
+              $restam = sizeof($week_total);
+              $soma = 0;
+              foreach ($FCR1 as $key) {
+                $htm = $htm.'<td class="week">'.$key."</td>";
+                $restam--;
+                $soma += $key;
+              }
+              $insert1 = $soma;
+              $yoy = impr1($fc,$soma);
+
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+              $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 <td '.$yoy.'</td>
+                </tr>
+                <tr style="text-align: center; font-size:110%;">
+                 <td>Total QA</td>
+                 <td class="lp"><b>'.$sales.'</td>
+                 <td class="ao"><b></td>';
+                 $soma1 = 0;
+              foreach ($FCR2 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $soma1 += $key;
+              }
+              $insert2 = $soma1;
+              
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+
+              $yoy = impr2($sales,$soma1);
+                 $htm = $htm.'
+                 <td class="ap"><b>'.$soma1.'</td>
+                 <td '.$yoy.'</td>
+                </tr>
+                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                 <td >Rate </td>
+                 <td class="lp"><b>'.$rateFCR.'</td>
+                 <td class="ao"><b></td>';
+              foreach ($FCR3 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+              }
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+              if($soma1 != 0){
+                $soma = round($soma/$soma1*100,2);
+              }
+              $insert3 = $soma;
+
+              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
+                $command->bindValue(':fail', $insert1);
+                $command->bindValue(':sales', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+              }
+              $yoy = impr1($rateFCR,$soma);
+              $y = i1($rateFCR,$soma);
+              
+              if ($y >= 2) $ptsFCR = 5;
+              elseif ($y >= 1) $ptsFCR = 4;
+              elseif ($y >= 0) $ptsFCR = 3;
+              elseif ($y >= -1) $ptsFCR =  2;
+              else $ptsFCR =  1;
+              $ptsFCR = ($ptsFCR/5)*20;
+
+                $p = ($ptsFCR/20)*100;
+                $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                 <td class="patt">20</td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                  <td style="vertical-align: middle;"title="Failure Cost Rate" bgcolor="#e0e0e0">IF Cost </td>
+                  <td>IF Cost ($)</td>
+                 <td class="lp"><b>'.$rateFCR.'</td>
+                 <td class="ao"><b>0.44</td>';
+              foreach ($FCR3 as $key) {
+                $htm = $htm.'<td class="week">'.$key.'</td>';
+              }
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td class="week"></td>';
+              }
+              if($soma1 != 0){
+                $soma = round($soma/$soma1*100,2);
+              }
+              $insert3 = $soma;
+
+              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
+                $command->bindValue(':fail', $insert1);
+                $command->bindValue(':sales', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+              }
+              $yoy = impr1($rateFCR,$soma);
+              $y = i1($rateFCR,$soma);
+              
+              if ($y >= 2) $ptsFCR = 5;
+              elseif ($y >= 1) $ptsFCR = 4;
+              elseif ($y >= 0) $ptsFCR = 3;
+              elseif ($y >= -1) $ptsFCR =  2;
+              else $ptsFCR =  1;
+              $ptsFCR = ($ptsFCR/5)*20;
+
+                $p = ($ptsFCR/20)*100;
+                $htm = $htm.'
+                 <td class="ap"><b>'.$soma.'</td>
+                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                 <td class="patt">20</td>
+                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
+                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%;">
+                <td rowspan="6" style="vertical-align: middle" bgColor="#e0e0e0">Target Index</td>';
+                
+                
+
+                $htm = $htm.'
+                 <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
                  <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
                  <td>Acc. SVC</td>
                  <td class="lp">';
@@ -423,344 +1139,13 @@ function semana_do_ano($dia,$mes,$ano){
                  <td bgColor="#e0e0e0" class="pts" >'.$ptsFFR.'</td>
                  <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
                 </tr>';
-        // AQUI COMEÇA O FCR
-                $htm = $htm.'
-                <tr style="text-align: center; font-size:110%;">
-                 <td rowspan="3" style="vertical-align: middle"title="Failure Cost Rate" bgcolor="#e0e0e0">FCR </td>
-                 <td>Failure cost</td>
-                 <td class="lp"><b>'.$fc.'</td>
-                 <td class="ao"><b>60,4</td>';
-
-              $restam = sizeof($week_total);
-              $soma = 0;
-              foreach ($FCR1 as $key) {
-                $htm = $htm.'<td class="week">'.$key."</td>";
-                $restam--;
-                $soma += $key;
-              }
-              $insert1 = $soma;
-              $yoy = impr1($fc,$soma);
-
-              for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
-              }
 
               $htm = $htm.'
-                 <td class="ap"><b>'.$soma.'</td>
-                 <td '.$yoy.'</td>
-                </tr>
-                <tr style="text-align: center; font-size:110%;">
-                 <td>Sales</td>
-                 <td class="lp"><b>'.$sales.'</td>
-                 <td class="ao"><b>13802</td>';
-                 $soma1 = 0;
-              foreach ($FCR2 as $key) {
-                $htm = $htm.'<td class="week">'.$key.'</td>';
-                $soma1 += $key;
-              }
-              $insert2 = $soma1;
-              
-              for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
-              }
-
-              $yoy = impr2($sales,$soma1);
-                 $htm = $htm.'
-                 <td class="ap"><b>'.$soma1.'</td>
-                 <td '.$yoy.'</td>
-                </tr>
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
-                 <td >Rate </td>
-                 <td class="lp"><b>'.$rateFCR.'</td>
-                 <td class="ao"><b>0.44</td>';
-              foreach ($FCR3 as $key) {
-                $htm = $htm.'<td class="week">'.$key.'</td>';
-              }
-              for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
-              }
-              if($soma1 != 0){
-                $soma = round($soma/$soma1*100,2);
-              }
-              $insert3 = $soma;
-
-              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
-                $result = $command->queryAll();
-                foreach ($result as $perk) {
-                  $qtd = $perk['COUNT(*)'];
-                  break;
-                }
-                if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
-                  $sql_result = $command->execute();
-                }else{
-                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
-                $command->bindValue(':fail', $insert1);
-                $command->bindValue(':sales', $insert2);
-                $command->bindValue(':rate', $insert3);
-                $command->bindValue(':month', $month);
-                $command->bindValue(':year', $year);
-                $sql_result = $command->execute();
-              }
-              $yoy = impr1($rateFCR,$soma);
-              $y = i1($rateFCR,$soma);
-              
-              if ($y >= 2) $ptsFCR = 5;
-              elseif ($y >= 1) $ptsFCR = 4;
-              elseif ($y >= 0) $ptsFCR = 3;
-              elseif ($y >= -1) $ptsFCR =  2;
-              else $ptsFCR =  1;
-              $ptsFCR = ($ptsFCR/5)*20;
-
-                $p = ($ptsFCR/20)*100;
-                $htm = $htm.'
-                 <td class="ap"><b>'.$soma.'</td>
-                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                 <td class="patt">20</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
-                </tr>';
-
-                $htm = $htm.'
-                <tr style="text-align: center; font-size:110%;">
-                <td rowspan="9" style="vertical-align: middle" bgColor="#e0e0e0">Production</td>
-                <td rowspan="3" style="vertical-align: middle" bgColor="#e0e0e0" title="Parts Return Rate">PRR</td>
-                <td>Defect Quantity</td>
-                <td class="lp"><b>'.$ppq.'</td>
-
-                <td class="ao"><b></td>';
-
-                $restam = sizeof($week_total);
-                $soma = 0;
-                foreach ($PRR1 as $key) {
-                    $htm = $htm.'<td class="week">'.$key.'</td>';
-                    $restam--;
-                    $soma += $key;
-                }
-                for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
-                }
-
-                $insert1 = $soma;
-                $yoy = impr1($ppq,$soma);
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
-                     <td '.$yoy.'</td>
-                </tr>
-                <tr style="text-align: center; font-size:110%;">
-                <td>Production Quantity</td>
-                <td class="lp">';
-
-                $htm = $htm.'<b>'.$tpqPRR.'</td>
-                <td class="ao"><b></td>';
-                $soma1 = 0;
-                foreach ($PRR2 as $key) {
-                  $htm = $htm.'<td class="week">'.$key.'</td>';
-                  $soma1 += $key;
-                }
-                for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
-                }
-
-                $insert2 = $soma1;
-                $yoy = impr2($tpqPRR,$soma1);
-                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
-                <td '.$yoy.'</td>
-                </tr>
-                <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
-                <td bgColor="#e0e0e0" >PPM</td>
-                <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
-                <td bgColor="#e0e0e0" class="ao"><b>454</td>';
-
-
-                if($soma1 != 0){
-                  $soma = round(($soma/$soma1)*1000000);
-                }
-
-                $insert3 = $soma;
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
-                $result = $command->queryAll();
-                foreach ($result as $perk) {
-                  $qtd = $perk['COUNT(*)'];
-                  break;
-                }
-                if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
-                  $sql_result = $command->execute();
-                }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
-                  $command->bindValue(':defect', $insert1);
-                  $command->bindValue(':tpq', $insert2);
-                  $command->bindValue(':ppm', $insert3);
-                  $command->bindValue(':month', $month);
-                  $command->bindValue(':year', $year);
-                  $sql_result = $command->execute();
-                }
-                
-
-                 
-                foreach ($PRR3 as $key) {
-                   $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
-                }
-                for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
-                }
-                $yoy = impr1($ppmPRR,$soma);
-                $y = i1($ppmPRR,$soma);
-                $ptsPRR = pts($ppmPRR, $y, 5000, 3000, 1000);
-                $ptsPRR = ($ptsPRR/5)*15;
-                $p = ($ptsPRR/15)*100;
-
-
-                $htm = $htm.'<td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
-                <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                <td bgColor="#e0e0e0" class="patt">15</td>
-                <td bgColor="#e0e0e0" class="pts" >'.$ptsPRR.'</td>
-                <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
-                </tr>';
-                
-                $htm = $htm.'
-                <tr style="text-align: center; font-size:110%;">
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
-                <td>Defect Quantity</td>
-                <td class="lp"><b>'.$def.'</td>
-                <td class="ao"><b></td>';
-                $soma = 0;
-                $restam = sizeof($week_total);
-                foreach ($TLDR1 as $key) {
-                  $htm = $htm.'<td class="week">'.$key.'</td>';
-                  $restam--;
-                  $soma += $key;
-                }
-                for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
-                }
-
-                $insert1 = $soma;
-                $yoy = impr1($def,$soma);
-                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
-                <td '.$yoy.'</td>
-                </tr>
-                <tr style="text-align: center; font-size:110%;">
-                <td>Production Quantity</td>
-                <td class="lp"><b>'.$tpqTLDR.'</td>
-                <td class="ao"><b></td>';
-                $soma1 = 0;
-
-                foreach ($TLDR2 as $key) {
-                  $htm = $htm.'<td class="week">'.$key.'</td>';
-                  $soma1 += $key;
-                }
-                for ($i=0; $i < $restam; $i++) { 
-                  $htm = $htm.'<td class="week"></td>';
-                }
-                $yoy = impr2($tpqTLDR,$soma1);
-
-                $insert2 = $soma1;
-                $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
-                <td '.$yoy.'</td>
-                </tr>
-                <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
-                <td>PPM</td>
-                <td class="lp"><b>'.$ppmTLDR.'</td>
-                <td class="ao"><b>4200</td>';
-                 
-                if($soma1 != 0){
-                  $soma = round(($soma/$soma1)*1000000);
-                }
-
-                foreach ($TLDR3 as $key) {
-                  $htm = $htm.'<td class="week">'.$key.'</td>';
-                }
-                for ($i=0; $i < $restam; $i++) { 
-                  $htm = $htm.'<td class="week"></td>';
-                }
-
-                $insert3 = $soma;
-
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
-                $result = $command->queryAll();
-                foreach ($result as $perk) {
-                  $qtd = $perk['COUNT(*)'];
-                  break;
-                }
-                if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.tldr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm= ".$insert3." WHERE month = ".$month." AND year = ".$year.";");
-                  $sql_result = $command->execute();
-                }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
-                  $command->bindValue(':defect', $insert1);
-                  $command->bindValue(':tpq', $insert2);
-                  $command->bindValue(':ppm', $insert3);
-                  $command->bindValue(':month', $month);
-                  $command->bindValue(':year', $year);
-                  $sql_result = $command->execute(); 
-                }
-
-                $yoy = impr1($ppmTLDR,$soma);
-                $y = i1($ppmTLDR,$soma);
-                $ptsTLDR = pts($ppmTLDR, $y, 10000, 5000, 2000);
-                $ptsTLDR = ($ptsTLDR/5)*15;
-                $p = ($ptsTLDR/15)*100;
-                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
-                <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                <td class="patt">15</td>
-                <td bgColor="#e0e0e0" class="pts" >'.$ptsTLDR.'</td>
-                <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
-                </tr>';
-
-        // IFRR começa aqui
-                $htm = $htm.'
-                <tr style="text-align: center; font-size:110%">
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
-                <td>Rework Quantity</td>
-                 <td class="lp"><b>'.$rew.'</td>
-                 <td class="ao"><b></td>';
-                $soma = 0;
-                $restam = sizeof($week_total);
-                foreach ($IFRR1 as $key) {
-                  $htm = $htm.'<td class="week">'.$key.'</td>';
-                  $restam--;
-                  $soma+=$key;
-                }
-
-                for ($i=0; $i < $restam; $i++) { 
-                  $htm = $htm.'<td class="week"></td>';
-                }
-
-                $insert1 = $soma;
-
-                 
-                $yoy = impr1($rew,$soma);
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
-                     <td '.$yoy.'</td>
-                </tr>
-                <tr style="text-align: center; font-size:110%;">
-                  <td>Production Quantity</td>
-                 <td class="lp"><b>'.$tpqIFRR.'</td>
-                 <td class="ao"><b></td>';
-                 $soma1 = 0;
-                 foreach ($IFRR2 as $key) {
-                    $htm = $htm.'<td class="week">'.$key.'</td>';
-                    $soma1+=$key;
-                 }
-
-                 for ($i=0; $i < $restam; $i++) { 
-                    $htm = $htm.'<td class="week"></td>';
-                 }
-
-                $yoy = impr2($tpqIFRR,$soma1);
-
-                $insert2 = $soma1;
-                $htm = $htm.'
-                     <td class="ap"><b>'.$soma1.'</td>
-                     <td '.$yoy.'</td>
-                </tr>
-                <tr bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
-                  <td bgColor="#e0e0e0">PPM</td>
+              <tr style="text-align: center; font-size:110%;">
+                <td rowspan="3"></td>
+                <td colspan="2">Rework Field</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
-                  <td bgColor="#e0e0e0" class="ao"><b>2,45</td>';
+                  <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                  
                 if($soma1 != 0){
                   $soma = round(($soma/$soma1)*100,2);
@@ -795,26 +1180,134 @@ function semana_do_ano($dia,$mes,$ano){
                 for ($i=0; $i < $restam; $i++) { 
                   $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
                 }
-                $colspan = 2+$colspan-1;
                  
                 $yoy = impr1($ppmIFRR,$soma);
                 $y = i1($ppmIFRR,$soma);
                 $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
                 $ptsIFRR = ($ptsIFRR/5)*15;
                 $p = ($ptsIFRR/15)*100;
-                $somarates = $ptsFFR+$ptsFCR+$ptsPRR+$ptsTLDR+$ptsIFRR;
                 $htm = $htm.'
-                     <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
-                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                  <td bgColor="#e0e0e0"class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsIFRR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
-                </tr>
+                     <td class="ap"><b>'.$soma.'</td>
+                     <td '.$yoy.'</td>
+                <td class="patt">-</td>
+                <td class="pts" >-</td>
+                <td class="prctg">-</td>
+                </tr>';
+
+                $htm = $htm.'
+              <tr style="text-align: center; font-size:110%;">
+                <td colspan="2">CEO Report</td>
+                  <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
+                  <td bgColor="#e0e0e0" class="ao"><b>0</td>';
+                 
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*100,2);
+                }
+
+                $insert3 = $soma;
+
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                  $command->bindValue(':rework', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':rate', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                  
+
+                foreach ($IFRR3 as $key) {
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                 
+                $yoy = impr1($ppmIFRR,$soma);
+                $y = i1($ppmIFRR,$soma);
+                $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
+                $ptsIFRR = ($ptsIFRR/5)*15;
+                $p = ($ptsIFRR/15)*100;
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     <td '.$yoy.'</td>
+                <td class="patt">-</td>
+                <td class="pts" >-</td>
+                <td class="prctg">-</td>
+                </tr>';
+
+                $htm = $htm.'
+              <tr style="text-align: center; font-size:110%;">
+                <td colspan="2">Sales IQC</td>
+                  <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
+                  <td bgColor="#e0e0e0" class="ao"><b>0</td>';
+                 
+                if($soma1 != 0){
+                  $soma = round(($soma/$soma1)*100,2);
+                }
+
+                $insert3 = $soma;
+
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                  $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                  $command->bindValue(':rework', $insert1);
+                  $command->bindValue(':tpq', $insert2);
+                  $command->bindValue(':rate', $insert3);
+                  $command->bindValue(':month', $month);
+                  $command->bindValue(':year', $year);
+                  $sql_result = $command->execute();
+                }
+                  
+
+                foreach ($IFRR3 as $key) {
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+                }
+
+                for ($i=0; $i < $restam; $i++) { 
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+                }
+                 
+                $yoy = impr1($ppmIFRR,$soma);
+                $y = i1($ppmIFRR,$soma);
+                $ptsIFRR = pts($ppmIFRR, $y, 5, 3, 1);
+                $ptsIFRR = ($ptsIFRR/5)*15;
+                $p = ($ptsIFRR/15)*100;
+                $htm = $htm.'
+                     <td class="ap"><b>'.$soma.'</td>
+                     <td '.$yoy.'</td>
+                <td class="patt">-</td>
+                <td class="pts" >-</td>
+                <td class="prctg">-</td>
+                </tr>';
+
+
+                $colspan = $colspan+6;
+                $somarates = $ptsFFR+$ptsFCR+$ptsPRR+$ptsTLDR+$ptsIFRR;
+                
+                $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                <td bgColor="#e0e0e0"colspan = 3>Total</td>
-                <td bgColor="#e0e0e0"colspan = '.$colspan.'></td>
-                <td></td>
-                <td class="patt">100</td>
+                <td colspan = '.$colspan.'></td>
+                <td >Total</td>
                 <td class="pts">'.$somarates.'</td>
                 <td class="prctg">'.$somarates.'%</td>
                 </tr>

@@ -183,6 +183,9 @@ function semana_do_ano($dia,$mes,$ano){
         $PRR1 = array(); $PRR2 = array(); $PRR3 = array();
         $TLDR1 = array(); $TLDR2 = array(); $TLDR3 = array();
         $IFRR1 = array(); $IFRR2 = array(); $IFRR3 = array();
+        $LINE = array();
+        $LRR1 = array(); $LRR2 = array(); $LRR3 = array();
+        $NGL1 = array(); $NGL2 = array(); $NGL3 = array();
 
         foreach ($week_total as $key) {
 
@@ -246,6 +249,41 @@ function semana_do_ano($dia,$mes,$ano){
                 array_push($IFRR1,$rew);
                 array_push($IFRR2,$tpq);
                 array_push($IFRR3,$ppm);
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT qty FROM bd_lg.linestop_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $qty = $perk['qty'];
+                array_push($LINE,$qty);
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT ng, tpq, rate FROM bd_lg.lrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ng = $perk['ng'];
+                $tpq = $perk['tpq'];
+                $rate = $perk['rate'];
+                array_push($LRR1,$ng);
+                array_push($LRR2,$tpq);
+                array_push($LRR3,$rate);
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT ng, total, ppm FROM bd_lg.nglot_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ng = $perk['ng'];
+                $total = $perk['total'];
+                $ppm = $perk['ppm'];
+                array_push($NGL1,$ng);
+                array_push($NGL2,$total);
+                array_push($NGL3,$ppm);
                 break;
               }
         }
@@ -333,7 +371,7 @@ function semana_do_ano($dia,$mes,$ano){
                  <td rowspan="20" style="vertical-align: middle">Process Index</td>
                  <td rowspan="6" style="vertical-align: middle" >IQC</td>
                  <td rowspan="3" style="vertical-align: middle" >PRR</td>
-                 <td>Defect Quantity</td>
+                 <td>Defect Qty</td>
                 <td class="lp"><b>'.$ppq.'</td>
 
                 <td class="ao"><b></td>';
@@ -356,7 +394,7 @@ function semana_do_ano($dia,$mes,$ano){
                      <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                <td>Production Quantity</td>
+                <td>Production Qty</td>
                 <td class="lp">';
 
                 $htm = $htm.'<b>'.$tpqPRR.'</td>
@@ -531,7 +569,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate">TLDR</td>
-                <td>Defect Quantity</td>
+                <td>Defect Qty</td>
                 <td class="lp"><b>'.$def.'</td>
                 <td class="ao"><b></td>';
                 $soma = 0;
@@ -551,7 +589,7 @@ function semana_do_ano($dia,$mes,$ano){
                 <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                <td>Production Quantity</td>
+                <td>Production Qty</td>
                 <td class="lp"><b>'.$tpqTLDR.'</td>
                 <td class="ao"><b></td>';
                 $soma1 = 0;
@@ -621,7 +659,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%">
                 <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" >IFRR </td>
-                <td>Rework Quantity</td>
+                <td>Rework Qty</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
                 $soma = 0;
@@ -645,7 +683,7 @@ function semana_do_ano($dia,$mes,$ano){
                      <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
-                  <td>Production Quantity</td>
+                  <td>Production Qty</td>
                  <td class="lp"><b>'.$tpqIFRR.'</td>
                  <td class="ao"><b></td>';
                  $soma1 = 0;
@@ -885,7 +923,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                   <td rowspan="3" style="vertical-align: middle;">Temporary Workers Rate</td>
-                  <td style="vertical-align: middle;">Temporary Quantity</td>
+                  <td style="vertical-align: middle;">Temporary Qty</td>
                   <td class="lp"><b>'.$fc.'</td>
                   <td class="ao"><b></td>';
 

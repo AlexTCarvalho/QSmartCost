@@ -331,6 +331,34 @@ function semana_do_ano($dia,$mes,$ano){
                 $ppmIFRR = $perk['rate'];
                 break;
               }
+
+          $command = $connection->createCommand("SELECT qty FROM bd_lg.linestop_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $qty = $perk['qty'];
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT ng, tpq, rate FROM bd_lg.lrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ngLRR = $perk['ng'];
+                $tpqLRR = $perk['tpq'];
+                $rateLRR = $perk['rate'];
+                break;
+              }
+
+              $command = $connection->createCommand("SELECT ng, total, ppm FROM bd_lg.nglot_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $ngLot = $perk['ng'];
+                $total = $perk['total'];
+                $ppmLot = $perk['ppm'];
+                break;
+              }
           
         $colspan = sizeof($week_total)+2;
         $Acc = 0;
@@ -469,13 +497,13 @@ function semana_do_ano($dia,$mes,$ano){
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="3" style="vertical-align: middle">LRR</td>
                  <td>Lot NG</td>
-                <td class="lp"><b>'.$ppq.'</td>
+                <td class="lp"><b>'.$ngLRR.'</td>
 
                 <td class="ao"><b></td>';
 
                 $restam = sizeof($week_total);
                 $soma = 0;
-                foreach ($PRR1 as $key) {
+                foreach ($LRR1 as $key) {
                     $htm = $htm.'<td class="week">'.$key.'</td>';
                     $restam--;
                     $soma += $key;
@@ -485,7 +513,7 @@ function semana_do_ano($dia,$mes,$ano){
                 }
 
                 $insert1 = $soma;
-                $yoy = impr1($ppq,$soma);
+                $yoy = impr1($tpqLRR,$soma);
                 $htm = $htm.'
                      <td class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
@@ -494,10 +522,10 @@ function semana_do_ano($dia,$mes,$ano){
                 <td>Lot Received</td>
                 <td class="lp">';
 
-                $htm = $htm.'<b>'.$tpqPRR.'</td>
+                $htm = $htm.'<b>'.$tpqLRR.'</td>
                 <td class="ao"><b></td>';
                 $soma1 = 0;
-                foreach ($PRR2 as $key) {
+                foreach ($LRR2 as $key) {
                   $htm = $htm.'<td class="week">'.$key.'</td>';
                   $soma1 += $key;
                 }
@@ -512,29 +540,29 @@ function semana_do_ano($dia,$mes,$ano){
                 </tr>
                 <tr style="text-align: center; font-size:110%;">
                 <td bgColor="#e0e0e0" >Rate</td>
-                <td bgColor="#e0e0e0" class="lp"><b>'.$ppmPRR.'</td>
+                <td bgColor="#e0e0e0" class="lp"><b>'.$rateLRR.'</td>
                 <td bgColor="#e0e0e0" class="ao"><b>454</td>';
 
 
                 if($soma1 != 0){
-                  $soma = round(($soma/$soma1)*1000000);
+                  $soma = round(($soma/$soma1)*100,2);
                 }
 
                 $insert3 = $soma;
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.lrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE bd_lg.lrr_acc SET ng=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
-                  $command->bindValue(':defect', $insert1);
+                  $command = $connection->createCommand("INSERT INTO bd_lg.lrr_acc (ng,tpq,rate,month,year) VALUES (:ng,:tpq,:rate,:month,:year)");
+                  $command->bindValue(':ng', $insert1);
                   $command->bindValue(':tpq', $insert2);
-                  $command->bindValue(':ppm', $insert3);
+                  $command->bindValue(':rate', $insert3);
                   $command->bindValue(':month', $month);
                   $command->bindValue(':year', $year);
                   $sql_result = $command->execute();
@@ -542,15 +570,15 @@ function semana_do_ano($dia,$mes,$ano){
                 
 
                  
-                foreach ($PRR3 as $key) {
+                foreach ($LRR3 as $key) {
                    $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
                 }
                 for ($i=0; $i < $restam; $i++) { 
                     $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
                 }
-                $yoy = impr1($ppmPRR,$soma);
-                $y = i1($ppmPRR,$soma);
-                $ptsPRR = pts($ppmPRR, $y, 5000, 3000, 1000);
+                $yoy = impr1($rateLRR,$soma);
+                $y = i1($rateLRR,$soma);
+                $ptsPRR = pts($rateLRR, $y, 5000, 3000, 1000);
                 $ptsPRR = ($ptsPRR/5)*15;
                 $p = ($ptsPRR/15)*100;
 

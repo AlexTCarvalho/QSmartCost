@@ -527,10 +527,10 @@ function semana_do_ano($dia,$mes,$ano){
         // AQUI COMEÇA O FCR
                 $htm = $htm.'
                 <tr style="text-align: center; vertical-align: middle; font-size:110%;">
-                <td style="vertical-align: middle;" bgColor="#e0e0e0" rowspan="7">LQC</td>';
+                <td style="vertical-align: middle;" rowspan="7">LQC</td>';
 
                 $htm = $htm.'
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate"bgColor="#e0e0e0">TLDR</td>
+                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate">TLDR</td>
                 <td>Defect Quantity</td>
                 <td class="lp"><b>'.$def.'</td>
                 <td class="ao"><b></td>';
@@ -570,19 +570,19 @@ function semana_do_ano($dia,$mes,$ano){
                 <td '.$yoy.'</td>
                 </tr>
                 <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
-                <td>PPM</td>
-                <td class="lp"><b>'.$ppmTLDR.'</td>
-                <td class="ao"><b>4200</td>';
+                <td bgColor="#e0e0e0" >PPM</td>
+                <td bgColor="#e0e0e0" class="lp"><b>'.$ppmTLDR.'</td>
+                <td bgColor="#e0e0e0" class="ao"><b>4200</td>';
                  
                 if($soma1 != 0){
                   $soma = round(($soma/$soma1)*1000000);
                 }
 
                 foreach ($TLDR3 as $key) {
-                  $htm = $htm.'<td class="week">'.$key.'</td>';
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
                 }
                 for ($i=0; $i < $restam; $i++) { 
-                  $htm = $htm.'<td class="week"></td>';
+                  $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
                 }
 
                 $insert3 = $soma;
@@ -611,16 +611,16 @@ function semana_do_ano($dia,$mes,$ano){
                 $ptsTLDR = pts($ppmTLDR, $y, 10000, 5000, 2000);
                 $ptsTLDR = ($ptsTLDR/5)*15;
                 $p = ($ptsTLDR/15)*100;
-                $htm = $htm.'<td class="ap"><b>'.$soma.'</td>
-                <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                $htm = $htm.'<td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                <td '.$yoy.'</td>
                 <td class="patt">15</td>
-                <td bgColor="#e0e0e0" class="pts" >'.$ptsTLDR.'</td>
-                <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                <td class="pts" >'.$ptsTLDR.'</td>
+                <td class="prctg">'.$p.'%</td>
                 </tr>';
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%">
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" bgColor="#e0e0e0">IFRR </td>
+                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" >IFRR </td>
                 <td>Rework Quantity</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
@@ -667,7 +667,7 @@ function semana_do_ano($dia,$mes,$ano){
                 </tr>';
 
                 $htm = $htm.'
-                <tr bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
+                <tr style="text-align: center; font-size:110%;">
                   <td bgColor="#e0e0e0">PPM</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>2,45</td>';
@@ -713,15 +713,15 @@ function semana_do_ano($dia,$mes,$ano){
                 $p = ($ptsIFRR/15)*100;
                 $htm = $htm.'
                      <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
-                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                  <td bgColor="#e0e0e0"class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsIFRR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                     <td '.$yoy.'</td>
+                  <td class="patt">15</td>
+                 <td class="pts" >'.$ptsIFRR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
                 $htm = $htm.'
-                <tr bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
-                  <td bgColor="#e0e0e0">Line Stop Qty</td>
+                <tr style="text-align: center; font-size:110%;">
+                  <td >Line Stop Qty</td>
                   <td bgColor="#e0e0e0">Qty Line Stop QA</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$ppmIFRR.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
@@ -767,17 +767,17 @@ function semana_do_ano($dia,$mes,$ano){
                 $p = ($ptsIFRR/15)*100;
                 $htm = $htm.'
                      <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
-                     <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                  <td bgColor="#e0e0e0"class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsIFRR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                     <td '.$yoy.'</td>
+                <td class="patt">15</td>
+                <td class="pts" >'.$ptsIFRR.'</td>
+                <td class="prctg">'.$p.'%</td>
                 </tr>';
 
                 $htm = $htm.'
 
                 <tr style="text-align: center; font-size:110%";>
-                <td style="vertical-align: middle;" bgColor="#e0e0e0" rowspan="3">OQC</td>
-                <td style="vertical-align: middle;" bgColor="#e0e0e0" rowspan="3">NGC Sample Rate</td>
+                <td style="vertical-align: middle;" rowspan="3">OQC</td>
+                <td style="vertical-align: middle;" rowspan="3">NGC Sample Rate</td>
                 ';
 
 
@@ -870,16 +870,16 @@ function semana_do_ano($dia,$mes,$ano){
                 $p = ($ptsFCR/20)*100;
                 $htm = $htm.'
                  <td class="ap"><b>'.$soma.'</td>
-                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                 <td '.$yoy.'</td>
                  <td class="patt">20</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                 <td class="pts" >'.$ptsFCR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
                 $htm = $htm.'
                 <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
                   <td rowspan="4" style="vertical-align: middle;>Common</td>
-                  <td rowspan="3" style="vertical-align: middle;"title="Failure Cost Rate" bgcolor="#e0e0e0">Common </td>
+                  <td rowspan="3" style="vertical-align: middle;"title="Failure Cost Rate">Common </td>
                   
                   ';
 
@@ -927,15 +927,15 @@ function semana_do_ano($dia,$mes,$ano){
                  <td class="ap"><b>'.$soma1.'</td>
                  <td '.$yoy.'</td>
                 </tr>
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
-                 <td >Rate </td>
-                 <td class="lp"><b>'.$rateFCR.'</td>
-                 <td class="ao"><b></td>';
+                <tr style="text-align: center; font-size:110%;">
+                 <td bgColor="#e0e0e0" >Rate </td>
+                 <td bgColor="#e0e0e0" class="lp"><b>'.$rateFCR.'</td>
+                 <td bgColor="#e0e0e0" class="ao"><b></td>';
               foreach ($FCR3 as $key) {
-                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
               }
               for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
+                $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
               }
               if($soma1 != 0){
                 $soma = round($soma/$soma1*100,2);
@@ -972,76 +972,76 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $p = ($ptsFCR/20)*100;
                 $htm = $htm.'
-                 <td class="ap"><b>'.$soma.'</td>
-                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
+                 <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                 <td '.$yoy.'</td>
                  <td class="patt">20</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
-                </tr>';
-
-                $htm = $htm.'
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
-                  <td style="vertical-align: middle;"title="Failure Cost Rate" bgcolor="#e0e0e0">IF Cost </td>
-                  <td>IF Cost ($)</td>
-                 <td class="lp"><b>'.$rateFCR.'</td>
-                 <td class="ao"><b>0.44</td>';
-              foreach ($FCR3 as $key) {
-                $htm = $htm.'<td class="week">'.$key.'</td>';
-              }
-              for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
-              }
-              if($soma1 != 0){
-                $soma = round($soma/$soma1*100,2);
-              }
-              $insert3 = $soma;
-
-              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
-                $result = $command->queryAll();
-                foreach ($result as $perk) {
-                  $qtd = $perk['COUNT(*)'];
-                  break;
-                }
-                if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
-                  $sql_result = $command->execute();
-                }else{
-                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
-                $command->bindValue(':fail', $insert1);
-                $command->bindValue(':sales', $insert2);
-                $command->bindValue(':rate', $insert3);
-                $command->bindValue(':month', $month);
-                $command->bindValue(':year', $year);
-                $sql_result = $command->execute();
-              }
-              $yoy = impr1($rateFCR,$soma);
-              $y = i1($rateFCR,$soma);
-              
-              if ($y >= 2) $ptsFCR = 5;
-              elseif ($y >= 1) $ptsFCR = 4;
-              elseif ($y >= 0) $ptsFCR = 3;
-              elseif ($y >= -1) $ptsFCR =  2;
-              else $ptsFCR =  1;
-              $ptsFCR = ($ptsFCR/5)*20;
-
-                $p = ($ptsFCR/20)*100;
-                $htm = $htm.'
-                 <td class="ap"><b>'.$soma.'</td>
-                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                 <td class="patt">20</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFCR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                 <td class="pts" >'.$ptsFCR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                <td rowspan="6" style="vertical-align: middle" bgColor="#e0e0e0">Target Index</td>';
+                  <td style="vertical-align: middle;"title="Failure Cost Rate">IF Cost </td>
+                  <td bgColor="#e0e0e0" >IF Cost ($)</td>
+                 <td bgColor="#e0e0e0" class="lp"><b>'.$rateFCR.'</td>
+                 <td bgColor="#e0e0e0" class="ao"><b>0.44</td>';
+              foreach ($FCR3 as $key) {
+                $htm = $htm.'<td bgColor="#e0e0e0" class="week">'.$key.'</td>';
+              }
+              for ($i=0; $i < $restam; $i++) { 
+                $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
+              }
+              if($soma1 != 0){
+                $soma = round($soma/$soma1*100,2);
+              }
+              $insert3 = $soma;
+
+              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $result = $command->queryAll();
+                foreach ($result as $perk) {
+                  $qtd = $perk['COUNT(*)'];
+                  break;
+                }
+                if ($qtd > 0) {
+                  $command = $connection->createCommand("UPDATE bd_lg.fcr_acc SET fail=".$insert1.",sales=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $sql_result = $command->execute();
+                }else{
+                $command = $connection->createCommand("INSERT INTO bd_lg.fcr_acc (fail,sales,rate,month,year) VALUES (:fail,:sales,:rate,:month,:year)");
+                $command->bindValue(':fail', $insert1);
+                $command->bindValue(':sales', $insert2);
+                $command->bindValue(':rate', $insert3);
+                $command->bindValue(':month', $month);
+                $command->bindValue(':year', $year);
+                $sql_result = $command->execute();
+              }
+              $yoy = impr1($rateFCR,$soma);
+              $y = i1($rateFCR,$soma);
+              
+              if ($y >= 2) $ptsFCR = 5;
+              elseif ($y >= 1) $ptsFCR = 4;
+              elseif ($y >= 0) $ptsFCR = 3;
+              elseif ($y >= -1) $ptsFCR =  2;
+              else $ptsFCR =  1;
+              $ptsFCR = ($ptsFCR/5)*20;
+
+                $p = ($ptsFCR/20)*100;
+                $htm = $htm.'
+                 <td bgColor="#e0e0e0" class="ap"><b>'.$soma.'</td>
+                 <td '.$yoy.'</td>
+                 <td class="patt">20</td>
+                 <td class="pts" >'.$ptsFCR.'</td>
+                 <td class="prctg">'.$p.'%</td>
+                </tr>';
+
+                $htm = $htm.'
+                <tr style="text-align: center; font-size:110%;">
+                <td rowspan="6" style="vertical-align: middle">Target Index</td>';
                 
                 
 
                 $htm = $htm.'
-                 <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0">Market</td>
-                 <td rowspan="3" style="vertical-align: middle" bgcolor="#e0e0e0" title="Failure Field Rate">FFR </td>
+                 <td rowspan="3" style="vertical-align: middle">Market</td>
+                 <td rowspan="3" style="vertical-align: middle" title="Failure Field Rate">FFR </td>
                  <td>Acc. SVC</td>
                  <td class="lp">';
 

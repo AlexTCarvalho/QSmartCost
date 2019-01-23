@@ -454,20 +454,14 @@ function semana_do_ano($dia,$mes,$ano){
           break;
         }
 
-        $lm = $month-1;
         if (sizeof($TEMP2) == 0){
-          $command = $connection->createCommand("SELECT * FROM lg.temp_acc WHERE month = ".$lm." AND year = ".$LY." ORDER BY id DESC");
-
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $insert2 = $perk['total'];
-                break;
-              }
+          $insert2 = 0;
         }else{
           $insert2 = $TEMP2[sizeof($TEMP2)-1];
         }
 
-        
+        $insert1 = 0;
+        $insert3 = 0;
         if ($qtd == 0){
           $command = $connection->createCommand("INSERT INTO lg.temp_w (temp,total,rate,week,month,year) VALUES (:temp,:total,:rate,:week,:month,:year)");
           $command->bindValue(':temp', $insert1);
@@ -477,8 +471,6 @@ function semana_do_ano($dia,$mes,$ano){
           $command->bindValue(':month', $month);
           $command->bindValue(':year', $year);
           $sql_result = $command->execute();
-          $insert1 = 0;
-          $insert3 = 0;
           array_push($TEMP1,$insert1);
           array_push($TEMP2,$insert2);
           array_push($TEMP3,$insert3);
@@ -490,7 +482,7 @@ function semana_do_ano($dia,$mes,$ano){
         $Acc = 0;
         $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
                       <thead>
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                <tr style="text-align: center; font-size:110%;">
                  <th style="vertical-align: middle; text-align: center;" rowspan=2>Division</th>
                  <th style="vertical-align: middle; text-align: center;" rowspan=2>Domain</th>
                  <th style="vertical-align: middle; text-align: center;" rowspan=2 colspan=2>Index</th>
@@ -506,7 +498,7 @@ function semana_do_ano($dia,$mes,$ano){
                 </tr>
                 ';
 
-                $htm = $htm.'<tr bgcolor="#e0e0e0">';
+                $htm = $htm.'<tr>';
 
                 foreach ($week_total as $key) {
                   $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="80px"> <b>W'.$key.'</td>';
@@ -524,7 +516,7 @@ function semana_do_ano($dia,$mes,$ano){
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="20" style="vertical-align: middle">Process Index</td>
                  <td rowspan="6" style="vertical-align: middle" >IQC</td>
-                 <td rowspan="3" style="vertical-align: middle" >PRR</td>
+                 <td bgColor="#e0e0e0" rowspan="3" style="vertical-align: middle" >PRR</td>
                  <td>Defect Qty</td>
                 <td class="lp"><b>'.$ppq.'</td>
 
@@ -621,7 +613,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                 <td rowspan="3" style="vertical-align: middle">LRR</td>
+                 <td bgColor="#e0e0e0" rowspan="3" style="vertical-align: middle">LRR</td>
                  <td>Lot NG</td>
                 <td class="lp"><b>'.$ngLRR.'</td>
 
@@ -722,7 +714,7 @@ function semana_do_ano($dia,$mes,$ano){
                 <td style="vertical-align: middle;" rowspan="7">LQC</td>';
 
                 $htm = $htm.'
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate">TLDR</td>
+                <td rowspan="3" bgColor="#e0e0e0" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate">TLDR</td>
                 <td>Defect Qty</td>
                 <td class="lp"><b>'.$def.'</td>
                 <td class="ao"><b></td>';
@@ -812,7 +804,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%">
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" >IFRR </td>
+                <td rowspan="3" bgColor="#e0e0e0" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" >IFRR </td>
                 <td>Rework Qty</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
@@ -913,7 +905,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                  <td >Line Stop Qty</td>
+                  <td bgColor="#e0e0e0" >Line Stop Qty</td>
                   <td bgColor="#e0e0e0">Qty Line Stop QA</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$qty.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
@@ -968,7 +960,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 <tr style="text-align: center; font-size:110%";>
                 <td style="vertical-align: middle;" rowspan="3">OQC</td>
-                <td style="vertical-align: middle;" rowspan="3">NGC Sample Rate</td>
+                <td bgColor="#e0e0e0" style="vertical-align: middle;" rowspan="3">NGC Sample Rate</td>
                 ';
 
 
@@ -1015,15 +1007,15 @@ function semana_do_ano($dia,$mes,$ano){
                  <td class="ap"><b>'.$soma1.'</td>
                  <td '.$yoy.'</td>
                 </tr>
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
-                 <td >PPM </td>
-                 <td class="lp"><b>'.$ppmLot.'</td>
-                 <td class="ao"><b>1000</td>';
+                <tr style="text-align: center; font-size:110%;">
+                 <td bgcolor="#e0e0e0" >PPM </td>
+                 <td bgcolor="#e0e0e0" class="lp"><b>'.$ppmLot.'</td>
+                 <td bgcolor="#e0e0e0" class="ao"><b>1000</td>';
               foreach ($NGL3 as $key) {
-                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $htm = $htm.'<td bgcolor="#e0e0e0" class="week">'.$key.'</td>';
               }
               for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
+                $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
               }
               if($soma1 != 0){
                 $soma = round($soma/$soma1*1000000);
@@ -1056,7 +1048,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $p = ($ptsOGC/10)*100;
                 $htm = $htm.'
-                 <td class="ap"><b>'.$soma.'</td>
+                 <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                  <td '.$yoy.'</td>
                  <td class="patt">10</td>
                  <td class="pts" >'.$ptsOGC.'</td>
@@ -1064,14 +1056,14 @@ function semana_do_ano($dia,$mes,$ano){
                 </tr>';
 
                 $htm = $htm.'
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                <tr style="text-align: center; font-size:110%;">
                   <td rowspan="4" style="vertical-align: middle;>Common</td>
-                  <td rowspan="3" style="vertical-align: middle;"title="Failure Cost Rate">Common </td>
+                  <td rbgColor="#e0e0e0" owspan="3" style="vertical-align: middle;"title="Failure Cost Rate">Common </td>
                   
                   ';
 
                 $htm = $htm.'
-                  <td rowspan="3" style="vertical-align: middle;">Temporary Workers Rate</td>
+                  <td bgColor="#e0e0e0" rowspan="3" style="vertical-align: middle;" title="Temporary Workers Rate">OS</td>
                   <td style="vertical-align: middle;">Temporary Qty</td>
                   <td class="lp"><b>'.$temp.'</td>
                   <td class="ao"><b></td>';
@@ -1163,10 +1155,10 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                  <td style="vertical-align: middle;"title="Failure Cost Rate">IF Cost </td>
-                  <td bgColor="#e0e0e0" >IF Cost ($)</td>
-                 <td bgColor="#e0e0e0" class="lp"><b>'.$ifc.'</td>
-                 <td bgColor="#e0e0e0" class="ao"><b>2270</td>';
+                <td bgColor="#e0e0e0" style="vertical-align: middle;"title="Failure Cost Rate">IF Cost </td>
+                <td bgColor="#e0e0e0" >IF Cost ($)</td>
+                <td bgColor="#e0e0e0" class="lp"><b>'.$ifc.'</td>
+                <td bgColor="#e0e0e0" class="ao"><b>2270</td>';
                  $soma = 0;
                  $restam = sizeof($week_total);
               foreach ($IFC as $key) {
@@ -1222,7 +1214,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
                  <td rowspan="3" style="vertical-align: middle">Market</td>
-                 <td rowspan="3" style="vertical-align: middle" title="Failure Field Rate">FFR </td>
+                 <td bgColor="#e0e0e0" rowspan="3" style="vertical-align: middle" title="Failure Field Rate">FFR </td>
                  <td>Acc. SVC</td>
                  <td class="lp">';
 
@@ -1315,10 +1307,10 @@ function semana_do_ano($dia,$mes,$ano){
               $p = ($ptsFFR/15)*100;
               $htm = $htm.'
                  <td bgColor="#e0e0e0" class="ap"><b>'.$Acc.'</td>
-                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                 <td bgColor="#e0e0e0" class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFFR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                 <td '.$yoy.'</td>
+                 <td class="patt">15</td>
+                 <td class="pts" >'.$ptsFFR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
 
@@ -1326,7 +1318,8 @@ function semana_do_ano($dia,$mes,$ano){
 
               $htm = $htm.'
               <tr style="text-align: center; font-size:110%;">
-                <td colspan="3">Rework Field</td>
+              <td rowspan=3" style="vertical-align: middle;">Quality Issue</td>
+                <td bgColor="#e0e0e0" colspan="2" >Rework Field</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$rewf.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                 $restam = sizeof($week_total);
@@ -1348,7 +1341,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $pts=0;
                 $pts-=($soma);
                 $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 <td class="patt">-</td>
                 <td class="pts" >-</td>
@@ -1357,7 +1350,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
               <tr style="text-align: center; font-size:110%;">
-                <td colspan="3">CEO Report</td>
+                <td bgColor="#e0e0e0" colspan="2">CEO Report</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$ceorep.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                  
@@ -1380,7 +1373,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $y = i1($ceorep,$soma);
                 $pts-=($soma);
                 $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 <td class="patt">-</td>
                 <td class="pts" >-</td>
@@ -1389,7 +1382,7 @@ function semana_do_ano($dia,$mes,$ano){
 
                 $htm = $htm.'
               <tr style="text-align: center; font-size:110%;">
-                <td colspan="3">Sales IQC</td>
+                <td bgColor="#e0e0e0" colspan="2">Sales IQC</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$salesiqc.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                  
@@ -1430,7 +1423,7 @@ function semana_do_ano($dia,$mes,$ano){
                 $y = i1($insert3,$soma);
                 $pts-=($soma);
                 $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 <td class="patt">-</td>
                 <td class="pts" >-</td>

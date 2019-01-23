@@ -111,6 +111,7 @@ class QhiboardController extends Controller
 
     public function actionWeek()
     {
+      $connection = Yii::$app->getDb();
         function semana_do_ano($dia,$mes,$ano){
 
         $var=intval( date('z', mktime(0,0,0,$mes,$dia,$ano) ) / 7 ) + 1;
@@ -289,7 +290,7 @@ class QhiboardController extends Controller
         $IFC = array();
         $CEO = array(); $SIQC = array();  $REW = array();
 
-        $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.qhi_issues_w WHERE week = ".$week." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+        $command = $connection->createCommand("SELECT COUNT(*) FROM lg.qhi_issues_w WHERE week = ".$week." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
         $result = $command->queryAll();
         foreach ($result as $perk) {
           $qtd = $perk['COUNT(*)'];
@@ -300,7 +301,7 @@ class QhiboardController extends Controller
         $insert2 = 0;
         $insert3 = 0;
         if ($qtd == 0){
-          $command = $connection->createCommand("INSERT INTO bd_lg.qhi_issues_w (ceorep,rewf,salesiqc,week,month,year) VALUES (:ceoreport,:rewf,:salesiqc,:week,:month,:year)");
+          $command = $connection->createCommand("INSERT INTO lg.qhi_issues_w (ceorep,rewf,salesiqc,week,month,year) VALUES (:ceoreport,:rewf,:salesiqc,:week,:month,:year)");
           $command->bindValue(':ceoreport', $insert1);
           $command->bindValue(':rewf', $insert2);
           $command->bindValue(':salesiqc', $insert3);
@@ -312,7 +313,7 @@ class QhiboardController extends Controller
         foreach ($week_total as $key) {
 
 
-          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM lg.ffr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $accsvc = $perk['accsvc'];
@@ -324,7 +325,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT fail, sales, rate FROM bd_lg.fcr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT fail, sales, rate FROM lg.fcr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $fc = $perk['fail'];
@@ -336,7 +337,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.prr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.prr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $ppq = $perk['defect'];
@@ -348,7 +349,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.tldr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -361,7 +362,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT rework, tpq, rate FROM lg.ifrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -374,7 +375,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT qty FROM bd_lg.linestop_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT qty FROM lg.linestop_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -383,7 +384,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT ng, tpq, rate FROM bd_lg.lrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT ng, tpq, rate FROM lg.lrr_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -396,7 +397,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT ng, total, ppm FROM bd_lg.nglot_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT ng, total, ppm FROM lg.nglot_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -409,7 +410,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT temp, total, rate FROM bd_lg.temp_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT temp, total, rate FROM lg.temp_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -422,7 +423,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT ifc FROM bd_lg.ifcost_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT ifc FROM lg.ifcost_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -431,7 +432,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT * FROM bd_lg.qhi_issues_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT * FROM lg.qhi_issues_w WHERE week = ".$key ." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -445,7 +446,7 @@ class QhiboardController extends Controller
               }
         }
 
-          $command = $connection->createCommand("SELECT * FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT * FROM lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $accsvc = $perk['accsvc'];
@@ -454,7 +455,7 @@ class QhiboardController extends Controller
                 break;
               }       
         
-          $command = $connection->createCommand("SELECT fail, sales, rate FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT fail, sales, rate FROM lg.fcr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $fc = $perk['fail'];
@@ -463,7 +464,7 @@ class QhiboardController extends Controller
                 break;
               }
               
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $ppq = $perk['defect'];
@@ -472,7 +473,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $def = $perk['defect'];
@@ -480,7 +481,7 @@ class QhiboardController extends Controller
                 $ppmTLDR = $perk['ppm'];
                 break;
               }
-          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $rew = $perk['rework'];
@@ -489,7 +490,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-          $command = $connection->createCommand("SELECT qty FROM bd_lg.linestop_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT qty FROM lg.linestop_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -497,7 +498,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT ng, tpq, rate FROM bd_lg.lrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT ng, tpq, rate FROM lg.lrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -507,7 +508,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT ng, total, ppm FROM bd_lg.nglot_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT ng, total, ppm FROM lg.nglot_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -517,7 +518,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT temp, total, rate FROM bd_lg.temp_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT temp, total, rate FROM lg.temp_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -527,7 +528,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT ifc FROM bd_lg.ifcost_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT ifc FROM lg.ifcost_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -535,7 +536,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-              $command = $connection->createCommand("SELECT * FROM bd_lg.qhi_issues_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT * FROM lg.qhi_issues_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
 
               $result = $command->queryAll();
               foreach ($result as $perk) {
@@ -545,7 +546,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-        $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.temp_w WHERE week = ".$week." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
+        $command = $connection->createCommand("SELECT COUNT(*) FROM lg.temp_w WHERE week = ".$week." AND month = ".$month." AND year = ".$year." ORDER BY id DESC");
         $result = $command->queryAll();
         foreach ($result as $perk) {
           $qtd = $perk['COUNT(*)'];
@@ -555,13 +556,13 @@ class QhiboardController extends Controller
         if (sizeof($TEMP2) == 0){
           $insert2 = 0;
         }else{
-          $insert2 = $TEMP2[sizeof($TEMP2)-1]
+          $insert2 = $TEMP2[sizeof($TEMP2)-1];
         }
 
         $insert1 = 0;
         $insert3 = 0;
         if ($qtd == 0){
-          $command = $connection->createCommand("INSERT INTO bd_lg.temp_w (temp,total,rate,week,month,year) VALUES (:temp,:total,:rate,:week,:month,:year)");
+          $command = $connection->createCommand("INSERT INTO lg.temp_w (temp,total,rate,week,month,year) VALUES (:temp,:total,:rate,:week,:month,:year)");
           $command->bindValue(':temp', $insert1);
           $command->bindValue(':total', $insert2);
           $command->bindValue(':rate', $insert3);
@@ -619,7 +620,7 @@ class QhiboardController extends Controller
         $Acc = 0;
         $htm = '<table href="#" id="weekly-table" style="height: 400px"class="table table-striped table-condensed table-hover">
                       <thead>
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                <tr style="text-align: center; font-size:110%;">
                  <th style="vertical-align: middle; text-align: center;" rowspan=2>Division</th>
                  <th style="vertical-align: middle; text-align: center;" rowspan=2>Domain</th>
                  <th style="vertical-align: middle; text-align: center;" rowspan=2 colspan=2>Index</th>
@@ -635,7 +636,7 @@ class QhiboardController extends Controller
                 </tr>
                 ';
 
-                $htm = $htm.'<tr bgcolor="#e0e0e0">';
+                $htm = $htm.'<tr>';
 
                 foreach ($week_total as $key) {
                   $htm = $htm.'<td style="vertical-align: middle; text-align: center;"width="80px"> <b>W'.$key.'</td>';
@@ -653,7 +654,7 @@ class QhiboardController extends Controller
                 <tr style="text-align: center; font-size:110%;">
                  <td rowspan="20" style="vertical-align: middle">Process Index</td>
                  <td rowspan="6" style="vertical-align: middle" >IQC</td>
-                 <td rowspan="3" style="vertical-align: middle" >PRR</td>
+                 <td bgColor="#e0e0e0" rowspan="3" style="vertical-align: middle" >PRR</td>
                  <td>Defect Qty</td>
                 <td class="lp"><b>'.$ppq.'</td>
 
@@ -707,17 +708,17 @@ class QhiboardController extends Controller
                 }
 
                 $insert3 = $soma;
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.prr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command = $connection->createCommand("INSERT INTO lg.prr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
                   $command->bindValue(':defect', $insert1);
                   $command->bindValue(':tpq', $insert2);
                   $command->bindValue(':ppm', $insert3);
@@ -750,7 +751,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                 <td rowspan="3" style="vertical-align: middle">LRR</td>
+                 <td bgColor="#e0e0e0" rowspan="3" style="vertical-align: middle">LRR</td>
                  <td>Lot NG</td>
                 <td class="lp"><b>'.$ngLRR.'</td>
 
@@ -804,17 +805,17 @@ class QhiboardController extends Controller
                 }
 
                 $insert3 = $soma;
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.lrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM lg.lrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.lrr_acc SET ng=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.lrr_acc SET ng=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.lrr_acc (ng,tpq,rate,month,year) VALUES (:ng,:tpq,:rate,:month,:year)");
+                  $command = $connection->createCommand("INSERT INTO lg.lrr_acc (ng,tpq,rate,month,year) VALUES (:ng,:tpq,:rate,:month,:year)");
                   $command->bindValue(':ng', $insert1);
                   $command->bindValue(':tpq', $insert2);
                   $command->bindValue(':rate', $insert3);
@@ -851,7 +852,7 @@ class QhiboardController extends Controller
                 <td style="vertical-align: middle;" rowspan="7">LQC</td>';
 
                 $htm = $htm.'
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate">TLDR</td>
+                <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Total Line Defect Rate">TLDR</td>
                 <td>Defect Qty</td>
                 <td class="lp"><b>'.$def.'</td>
                 <td class="ao"><b></td>';
@@ -890,7 +891,7 @@ class QhiboardController extends Controller
                 $htm = $htm.'<td class="ap"><b>'.$soma1.'</td>
                 <td '.$yoy.'</td>
                 </tr>
-                <tr style="text-align: center; font-size:110%;" bgColor="#e0e0e0">
+                <tr style="text-align: center; font-size:110%;">
                 <td bgColor="#e0e0e0" >PPM</td>
                 <td bgColor="#e0e0e0" class="lp"><b>'.$ppmTLDR.'</td>
                 <td bgColor="#e0e0e0" class="ao"><b>4200</td>';
@@ -908,17 +909,17 @@ class QhiboardController extends Controller
 
                 $insert3 = $soma;
 
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.tldr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm= ".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.tldr_acc SET defect=".$insert1.",tpq=".$insert2.",ppm= ".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
+                  $command = $connection->createCommand("INSERT INTO lg.tldr_acc (defect,tpq,ppm,month,year) VALUES (:defect,:tpq,:ppm,:month,:year)");
                   $command->bindValue(':defect', $insert1);
                   $command->bindValue(':tpq', $insert2);
                   $command->bindValue(':ppm', $insert3);
@@ -941,7 +942,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%">
-                <td rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" >IFRR </td>
+                <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; font-size:110%; vertical-align: middle" title="Intern Failure Rework Rate" >IFRR </td>
                 <td>Rework Qty</td>
                  <td class="lp"><b>'.$rew.'</td>
                  <td class="ao"><b></td>';
@@ -999,17 +1000,17 @@ class QhiboardController extends Controller
 
                 $insert3 = $soma;
 
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.ifrr_acc SET rework=".$insert1.",tpq=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
+                  $command = $connection->createCommand("INSERT INTO lg.ifrr_acc (rework,tpq,rate,month,year) VALUES (:rework,:tpq,:rate,:month,:year)");
                   $command->bindValue(':rework', $insert1);
                   $command->bindValue(':tpq', $insert2);
                   $command->bindValue(':rate', $insert3);
@@ -1042,7 +1043,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                  <td >Line Stop Qty</td>
+                  <td bgcolor="#e0e0e0" >Line Stop Qty</td>
                   <td bgColor="#e0e0e0">Qty Line Stop QA</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$qty.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
@@ -1060,17 +1061,17 @@ class QhiboardController extends Controller
                   $htm = $htm.'<td bgColor="#e0e0e0" class="week"></td>';
                 }
 
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.linestop_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM lg.linestop_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.linestop_acc SET qty=".$insert1." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.linestop_acc SET qty=".$insert1." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("INSERT INTO bd_lg.linestop_acc (qty,month,year) VALUES (:qty,:month,:year)");
+                  $command = $connection->createCommand("INSERT INTO lg.linestop_acc (qty,month,year) VALUES (:qty,:month,:year)");
                   $command->bindValue(':qty', $insert1);
                   $command->bindValue(':month', $month);
                   $command->bindValue(':year', $year);
@@ -1097,7 +1098,7 @@ class QhiboardController extends Controller
 
                 <tr style="text-align: center; font-size:110%";>
                 <td style="vertical-align: middle;" rowspan="3">OQC</td>
-                <td style="vertical-align: middle;" rowspan="3">NGC Sample Rate</td>
+                <td bgcolor="#e0e0e0" style="vertical-align: middle;" rowspan="3">NGC Sample Rate</td>
                 ';
 
 
@@ -1144,32 +1145,32 @@ class QhiboardController extends Controller
                  <td class="ap"><b>'.$soma1.'</td>
                  <td '.$yoy.'</td>
                 </tr>
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
-                 <td >PPM </td>
-                 <td class="lp"><b>'.$ppmLot.'</td>
-                 <td class="ao"><b>1000</td>';
+                <tr style="text-align: center; font-size:110%;">
+                 <td bgcolor="#e0e0e0" >PPM </td>
+                 <td bgcolor="#e0e0e0" class="lp"><b>'.$ppmLot.'</td>
+                 <td bgcolor="#e0e0e0" class="ao"><b>1000</td>';
               foreach ($NGL3 as $key) {
-                $htm = $htm.'<td class="week">'.$key.'</td>';
+                $htm = $htm.'<td bgcolor="#e0e0e0" class="week">'.$key.'</td>';
               }
               for ($i=0; $i < $restam; $i++) { 
-                $htm = $htm.'<td class="week"></td>';
+                $htm = $htm.'<td bgcolor="#e0e0e0" class="week"></td>';
               }
               if($soma1 != 0){
                 $soma = round($soma/$soma1*1000000);
               }
               $insert3 = $soma;
 
-              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.nglot_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT COUNT(*) FROM lg.nglot_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.nglot_acc SET ng=".$insert1.",total=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.nglot_acc SET ng=".$insert1.",total=".$insert2.",ppm=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                $command = $connection->createCommand("INSERT INTO bd_lg.nglot_acc (ng,total,ppm,month,year) VALUES (:ng,:total,:ppm,:month,:year)");
+                $command = $connection->createCommand("INSERT INTO lg.nglot_acc (ng,total,ppm,month,year) VALUES (:ng,:total,:ppm,:month,:year)");
                 $command->bindValue(':ng', $insert1);
                 $command->bindValue(':total', $insert2);
                 $command->bindValue(':ppm', $insert3);
@@ -1185,7 +1186,7 @@ class QhiboardController extends Controller
 
                 $p = ($ptsOGC/10)*100;
                 $htm = $htm.'
-                 <td class="ap"><b>'.$soma.'</td>
+                 <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                  <td '.$yoy.'</td>
                  <td class="patt">10</td>
                  <td class="pts" >'.$ptsOGC.'</td>
@@ -1193,14 +1194,14 @@ class QhiboardController extends Controller
                 </tr>';
 
                 $htm = $htm.'
-                <tr bgcolor="#e0e0e0" style="text-align: center; font-size:110%;">
+                <tr style="text-align: center; font-size:110%;">
                   <td rowspan="4" style="vertical-align: middle;>Common</td>
                   <td rowspan="3" style="vertical-align: middle;"title="Failure Cost Rate">Common </td>
                   
                   ';
 
                 $htm = $htm.'
-                  <td rowspan="3" style="vertical-align: middle;">Temporary Workers Rate</td>
+                  <td bgcolor="#e0e0e0" rowspan="3" style="vertical-align: middle;" title="Temporary Workers Rate">OS</td>
                   <td style="vertical-align: middle;">Temporary Qty</td>
                   <td class="lp"><b>'.$temp.'</td>
                   <td class="ao"><b></td>';
@@ -1258,17 +1259,17 @@ class QhiboardController extends Controller
               }
               $insert3 = $Acc;
 
-              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.temp_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT COUNT(*) FROM lg.temp_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.temp_acc SET temp=".$insert1.",total=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.temp_acc SET temp=".$insert1.",total=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                $command = $connection->createCommand("INSERT INTO bd_lg.temp_acc (temp,total,rate,month,year) VALUES (:temp,:total,:rate,:month,:year)");
+                $command = $connection->createCommand("INSERT INTO lg.temp_acc (temp,total,rate,month,year) VALUES (:temp,:total,:rate,:month,:year)");
                 $command->bindValue(':temp', $insert1);
                 $command->bindValue(':total', $insert2);
                 $command->bindValue(':rate', $insert3);
@@ -1292,7 +1293,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
                 <tr style="text-align: center; font-size:110%;">
-                  <td style="vertical-align: middle;"title="Failure Cost Rate">IF Cost </td>
+                  <td bgcolor="#e0e0e0" style="vertical-align: middle;"title="Failure Cost Rate">IF Cost </td>
                   <td bgColor="#e0e0e0" >IF Cost ($)</td>
                  <td bgColor="#e0e0e0" class="lp"><b>'.$ifc.'</td>
                  <td bgColor="#e0e0e0" class="ao"><b>2270</td>';
@@ -1308,17 +1309,17 @@ class QhiboardController extends Controller
               }
               $insert3 = $soma;
 
-              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ifcost_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT COUNT(*) FROM lg.ifcost_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.ifcost_acc SET ifc=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.ifcost_acc SET ifc=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                $command = $connection->createCommand("INSERT INTO bd_lg.ifcost_acc (ifc,month,year) VALUES (:ifc,:month,:year)");
+                $command = $connection->createCommand("INSERT INTO lg.ifcost_acc (ifc,month,year) VALUES (:ifc,:month,:year)");
                 $command->bindValue(':ifc', $insert3);
                 $command->bindValue(':month', $month);
                 $command->bindValue(':year', $year);
@@ -1351,7 +1352,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
                  <td rowspan="3" style="vertical-align: middle">Market</td>
-                 <td rowspan="3" style="vertical-align: middle" title="Failure Field Rate">FFR </td>
+                 <td bgcolor="#e0e0e0" rowspan="3" style="vertical-align: middle" title="Failure Field Rate">FFR </td>
                  <td>Acc. SVC</td>
                  <td class="lp">';
 
@@ -1399,7 +1400,7 @@ class QhiboardController extends Controller
                  <td class="ap"><b>'.$Acc.'</td>
                  <td '.$yoy.'</td>
                 </tr>
-                <tr  bgColor="#e0e0e0" style="text-align: center; font-size:110%;">
+                <tr style="text-align: center; font-size:110%;">
                  <td bgColor="#e0e0e0">Rate</td>
                  <td bgColor="#e0e0e0" class="lp"><b>'.$rateFFR.'</td>
                  <td bgColor="#e0e0e0" class="ao"><b>1,90</td>';
@@ -1411,17 +1412,17 @@ class QhiboardController extends Controller
               $yoy = impr1($rateFFR,$Acc);
 
               $insert3 = $Acc;
-              $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.ffr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $command = $connection->createCommand("SELECT COUNT(*) FROM lg.ffr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd > 0) {
-                  $command = $connection->createCommand("UPDATE bd_lg.ffr_acc SET accsvc=".$insert1.",waccs=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.ffr_acc SET accsvc=".$insert1.",waccs=".$insert2.",rate=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }else{
-                $command = $connection->createCommand("INSERT INTO bd_lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
+                $command = $connection->createCommand("INSERT INTO lg.ffr_acc (accsvc,waccs,rate,month,year) VALUES (:accsvc,:waccs,:rate,:month,:year)");
                 $command->bindValue(':accsvc', $insert1);
                 $command->bindValue(':waccs', $insert2);
                 $command->bindValue(':rate', $insert3);
@@ -1444,10 +1445,10 @@ class QhiboardController extends Controller
               $p = ($ptsFFR/15)*100;
               $htm = $htm.'
                  <td bgColor="#e0e0e0" class="ap"><b>'.$Acc.'</td>
-                 <td bgcolor="#e0e0e0"'.$yoy.'</td>
-                 <td bgColor="#e0e0e0" class="patt">15</td>
-                 <td bgColor="#e0e0e0" class="pts" >'.$ptsFFR.'</td>
-                 <td bgColor="#e0e0e0" class="prctg">'.$p.'%</td>
+                 <td '.$yoy.'</td>
+                 <td class="patt">15</td>
+                 <td class="pts" >'.$ptsFFR.'</td>
+                 <td class="prctg">'.$p.'%</td>
                 </tr>';
 
 
@@ -1455,7 +1456,8 @@ class QhiboardController extends Controller
 
               $htm = $htm.'
               <tr style="text-align: center; font-size:110%;">
-                <td colspan="3">Rework Field</td>
+              <td rowspan="3">Quality Issue</td>
+                <td bgcolor="#e0e0e0" colspan="2">Rework Field</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$rewf.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                 $restam = sizeof($week_total);
@@ -1477,7 +1479,7 @@ class QhiboardController extends Controller
                 $pts=0;
                 $pts-=($soma);
                 $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 <td class="patt">-</td>
                 <td class="pts" >-</td>
@@ -1486,7 +1488,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
               <tr style="text-align: center; font-size:110%;">
-                <td colspan="3">CEO Report</td>
+                <td bgcolor="#e0e0e0" colspan="2">CEO Report</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$ceorep.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                  
@@ -1509,7 +1511,7 @@ class QhiboardController extends Controller
                 $y = i1($ceorep,$soma);
                 $pts-=($soma);
                 $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 <td class="patt">-</td>
                 <td class="pts" >-</td>
@@ -1518,7 +1520,7 @@ class QhiboardController extends Controller
 
                 $htm = $htm.'
               <tr style="text-align: center; font-size:110%;">
-                <td colspan="3">Sales IQC</td>
+                <td bgcolor="#e0e0e0" colspan="2">Sales IQC</td>
                   <td bgColor="#e0e0e0"class="lp"><b>'.$salesiqc.'</td>
                   <td bgColor="#e0e0e0" class="ao"><b>0</td>';
                  
@@ -1527,14 +1529,14 @@ class QhiboardController extends Controller
                 }
 
                 $insert3 = $soma;
-                $command = $connection->createCommand("SELECT COUNT(*) FROM bd_lg.qhi_issues_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+                $command = $connection->createCommand("SELECT COUNT(*) FROM lg.qhi_issues_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
                 $result = $command->queryAll();
                 foreach ($result as $perk) {
                   $qtd = $perk['COUNT(*)'];
                   break;
                 }
                 if ($qtd == 0){
-                  $command = $connection->createCommand("INSERT INTO bd_lg.qhi_issues_acc (ceorep,rewf,salesiqc,month,year) VALUES (:ceoreport,:rewf,:salesiqc,:month,:year)");
+                  $command = $connection->createCommand("INSERT INTO lg.qhi_issues_acc (ceorep,rewf,salesiqc,month,year) VALUES (:ceoreport,:rewf,:salesiqc,:month,:year)");
                   $command->bindValue(':ceoreport', $insert1);
                   $command->bindValue(':rewf', $insert2);
                   $command->bindValue(':salesiqc', $insert3);
@@ -1542,7 +1544,7 @@ class QhiboardController extends Controller
                   $command->bindValue(':year', $year);
                   $sql_result = $command->execute();
                 }else{
-                  $command = $connection->createCommand("UPDATE bd_lg.qhi_issues_acc SET ceorep=".$insert1.",rewf=".$insert2.",salesiqc=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
+                  $command = $connection->createCommand("UPDATE lg.qhi_issues_acc SET ceorep=".$insert1.",rewf=".$insert2.",salesiqc=".$insert3." WHERE month = ".$month." AND year = ".$year.";");
                   $sql_result = $command->execute();
                 }
                   
@@ -1559,7 +1561,7 @@ class QhiboardController extends Controller
                 $y = i1($insert3,$soma);
                 $pts-=($soma);
                 $htm = $htm.'
-                     <td class="ap"><b>'.$soma.'</td>
+                     <td bgcolor="#e0e0e0" class="ap"><b>'.$soma.'</td>
                      <td '.$yoy.'</td>
                 <td class="patt">-</td>
                 <td class="pts" >-</td>
@@ -1644,57 +1646,33 @@ class QhiboardController extends Controller
 
         $allmonths = [1,2,3,4,5,6,7,8,9,10,11,12];
 
-        $FFRly = array();
-        $FFRLY1 = 0;
-        $FFRLY2 = 0;
-        $FFRpy = array();
-        $FFRPY1 = 0;
-        $FFRPY2 = 0;
-        $FCRly = array();
-        $FCRLY1 = 0;
-        $FCRLY2 = 0;
-        $FCRpy = array();
-        $FCRPY1 = 0;
-        $FCRPY2 = 0;
-        $PRRly = array();
-        $PRRLY1 = 0;
-        $PRRLY2 = 0;
-        $PRRpy = array();
-        $PRRPY1 = 0;
-        $PRRPY2 = 0;
-        $TLDRly = array();
-        $TLDRLY1 = 0;
-        $TLDRLY2 = 0;
-        $TLDRpy = array();
-        $TLDRPY1 = 0;
-        $TLDRPY2 = 0;
-        $IFRRly = array();
-        $IFRRLY1 = 0;
-        $IFRRLY2 = 0;
-        $IFRRpy = array();
-        $IFRRPY1 = 0;
-        $IFRRPY2 = 0;
+        $PRRly = array(); $PRRLY1 = 0;  $PRRLY2 = 0;
+        $PRRpy = array(); $PRRPY1 = 0;  $PRRPY2 = 0;
+        $LRRly = array(); $LRRLY1 = 0;  $LRRLY2 = 0;
+        $LRRpy = array(); $LRRPY1 = 0;  $LRRPY2 = 0;
+        $TLDRly = array();  $TLDRLY1 = 0; $TLDRLY2 = 0;
+        $TLDRpy = array();  $TLDRPY1 = 0; $TLDRPY2 = 0;
+        $IFRRly = array();  $IFRRLY1 = 0; $IFRRLY2 = 0;
+        $IFRRpy = array();  $IFRRPY1 = 0; $IFRRPY2 = 0;
+        $LINEly = array();  $LINELY1 = 0;
+        $LINEpy = array();  $LINEPY1 = 0;
+        $OQCly = array(); $OQCLY1 = 0;  $OQCLY2 = 0;
+        $OQCpy = array(); $OQCPY1 = 0;  $OQCPY2 = 0;
+        $TEMPly = array(); $TEMPLY1 = 0;  $TEMPLY2 = 0;
+        $TEMPpy = array(); $TEMPPY1 = 0;  $TEMPPY2 = 0;
+        $IFCly = array(); $IFCLY1 = 0;
+        $IFCpy = array(); $IFCPY1 = 0;
+        $FFRly = array(); $FFRLY1 = 0;  $FFRLY2 = 0;
+        $FFRpy = array(); $FFRPY1 = 0;  $FFRPY2 = 0;
+        $FCRly = array(); $FCRLY1 = 0;  $FCRLY2 = 0;
+        $FCRpy = array(); $FCRPY1 = 0;  $FCRPY2 = 0;
+        $CeoReppy = array();  $ceorepPY1 = 0;
+        $SalesIQCpy = array();  $siqcpy = 0;
+        $REWFpy = array();  $rewfpy1 = 0;
         
         foreach ($allmonths as $month) {
-          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $FFRLY1 += $perk['accsvc'];
-                $FFRLY2 += $perk['waccs'];
-                array_push($FFRly, $perk['rate']);
-                break;
-              }
-        
-          $command = $connection->createCommand("SELECT fail, sales, rate FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $FCRLY1 += $perk['fail'];
-                $FCRLY2 += $perk['sales'];
-                array_push($FCRly, $perk['rate']);
-                break;
-              }
-              
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.prr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $PRRLY1 += $perk['defect'];
@@ -1703,42 +1681,7 @@ class QhiboardController extends Controller
                 break;
               }
 
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $TLDRLY1 += $perk['defect'];
-                $TLDRLY2 += $perk['tpq'];
-                array_push($TLDRly, $perk['ppm']);
-                break;
-              }
-          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $IFRRLY1 += $perk['rework'];
-                $IFRRLY2 += $perk['tpq'];
-                array_push($IFRRly, $perk['rate']);
-                break;
-              }
-
-          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM bd_lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$year." ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $FFRPY1 += $perk['accsvc'];
-                $FFRPY2 += $perk['waccs'];
-                array_push($FFRpy, $perk['rate']);
-                break;
-              }
-        
-          $command = $connection->createCommand("SELECT fail, sales, rate FROM bd_lg.fcr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
-              $result = $command->queryAll();
-              foreach ($result as $perk) {
-                $FCRPY1 += $perk['fail'];
-                $FCRPY2 += $perk['sales'];
-                array_push($FCRpy, $perk['rate']);
-                break;
-              }
-              
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.prr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $PRRPY1 += $perk['defect'];
@@ -1747,7 +1690,35 @@ class QhiboardController extends Controller
                 break;
               }
 
-          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM bd_lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+          $command = $connection->createCommand("SELECT ng, tpq, rate FROM lg.lrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $LRRLY1 += $perk['ng'];
+                $LRRLY2 += $perk['tpq'];
+                array_push($LRRly, $perk['rate']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT ng, tpq, rate FROM lg.lrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $LRRPY1 += $perk['ng'];
+                $LRRPY2 += $perk['tpq'];
+                array_push($LRRpy, $perk['rate']);
+                break;
+              }
+
+
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.tldr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $TLDRLY1 += $perk['defect'];
+                $TLDRLY2 += $perk['tpq'];
+                array_push($TLDRly, $perk['ppm']);
+                break;
+              }
+              
+          $command = $connection->createCommand("SELECT defect, tpq, ppm FROM lg.tldr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $TLDRPY1 += $perk['defect'];
@@ -1755,7 +1726,17 @@ class QhiboardController extends Controller
                 array_push($TLDRpy, $perk['ppm']);
                 break;
               }
-          $command = $connection->createCommand("SELECT rework, tpq, rate FROM bd_lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM lg.ifrr_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $IFRRLY1 += $perk['rework'];
+                $IFRRLY2 += $perk['tpq'];
+                array_push($IFRRly, $perk['rate']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT rework, tpq, rate FROM lg.ifrr_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
               $result = $command->queryAll();
               foreach ($result as $perk) {
                 $IFRRPY1 += $perk['rework'];
@@ -1763,6 +1744,106 @@ class QhiboardController extends Controller
                 array_push($IFRRpy, $perk['rate']);
                 break;
               }
+
+          $command = $connection->createCommand("SELECT qty FROM lg.linestop_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $LINELY1 += $perk['qty'];
+                array_push($LINEly, $perk['qty']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT qty FROM lg.linestop_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $LINEPY1 += $perk['qty'];
+                array_push($LINEpy, $perk['qty']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT ng, total, ppm FROM lg.nglot_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $OQCLY1 += $perk['ng'];
+                $OQCLY2 += $perk['total'];
+                array_push($OQCly, $perk['ppm']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT ng, total, ppm FROM lg.nglot_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $OQCPY1 += $perk['ng'];
+                $OQCPY2 += $perk['total'];
+                array_push($OQCpy, $perk['ppm']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT temp,total,rate FROM lg.temp_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $TEMPLY1 += $perk['temp'];
+                $TEMPLY2 += $perk['total'];
+                array_push($TEMPly, $perk['rate']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT temp,total,rate FROM lg.temp_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $TEMPPY1 += $perk['temp'];
+                $TEMPPY2 += $perk['total'];
+                array_push($TEMPpy, $perk['rate']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT ifc FROM lg.ifcost_acc WHERE month = ".$month." AND year = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $IFCLY1 += $perk['ifc'];
+                array_push($IFCly, $perk['ifc']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT ifc FROM lg.ifcost_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $IFCPY1 += $perk['ifc'];
+                array_push($IFCpy, $perk['ifc']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$LY." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $FFRLY1 += $perk['accsvc'];
+                $FFRLY2 += $perk['waccs'];
+                array_push($FFRly, $perk['rate']);
+                break;
+              }
+
+          $command = $connection->createCommand("SELECT accsvc, waccs, rate FROM lg.ffr_acc WHERE `month` = ".$month." AND `year` = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $FFRPY1 += $perk['accsvc'];
+                $FFRPY2 += $perk['waccs'];
+                array_push($FFRpy, $perk['rate']);
+                break;
+              }
+
+
+          $command = $connection->createCommand("SELECT rewf,salesiqc,ceorep FROM lg.qhi_issues_acc WHERE month = ".$month." AND year = ".$year." ORDER BY id DESC");
+              $result = $command->queryAll();
+              foreach ($result as $perk) {
+                $rewfpy1 += $perk['rewf'];
+                array_push($REWFpy, $perk['rewf']);
+                $siqcpy += $perk['salesiqc'];
+                array_push($SalesIQCpy, $perk['salesiqc']);
+                $ceorepPY1 += $perk['ceorep'];
+                array_push($CeoReppy, $perk['ceorep']);
+                break;
+              }
+
         }
       $htm = "
 
@@ -1802,134 +1883,35 @@ class QhiboardController extends Controller
        
      </script>";
 
+$htm = '<table href="#" id = "monthly-table" class="table table-striped table-condensed table-hover">
+          <thead>
+                <tr style="text-align: center; font-size:110%;">
+                 <th style="vertical-align: middle; text-align: center;" >Division</th>
+                 <th style="vertical-align: middle; text-align: center;" >Domain</th>
+                 <th style="vertical-align: middle; text-align: center;" colspan=2>Index</th>
+                 <th width="80px" style="text-align: center;">Jan</th>
+                 <th width="80px" style="text-align: center;">Feb</th>
+                 <th width="80px" style="text-align: center;">Mar</th>
+                 <th width="80px" style="text-align: center;">Apr</th>
+                 <th width="80px" style="text-align: center;">May</th>
+                 <th width="80px" style="text-align: center;">Jun</th>
+                 <th width="80px" style="text-align: center;">Jul</th>
+                 <th width="80px" style="text-align: center;">Aug</th>
+                 <th width="80px" style="text-align: center;">Sep</th>
+                 <th width="80px" style="text-align: center;">Oct</th>
+                 <th width="80px" style="text-align: center;">Nov</th>
+                 <th width="80px" style="text-align: center;">Dec</th>
+                 <th width="80px" style="text-align: center;">Acc.</th>
+                </tr>
+                ';
+
      $htm = $htm.'
-    <table href="#" id = "monthly-table" class="table table-striped table-condensed table-hover">
-     <thead>
-      <tr style="text-align: center;">
-       <th colspan="3" style="text-align: center; vertical-align: middle;">KPI</th>
-       <th width="80px" style="text-align: center;">Jan</th>
-       <th width="80px" style="text-align: center;">Feb</th>
-       <th width="80px" style="text-align: center;">Mar</th>
-       <th width="80px" style="text-align: center;">Apr</th>
-       <th width="80px" style="text-align: center;">May</th>
-       <th width="80px" style="text-align: center;">Jun</th>
-       <th width="80px" style="text-align: center;">Jul</th>
-       <th width="80px" style="text-align: center;">Aug</th>
-       <th width="80px" style="text-align: center;">Sep</th>
-       <th width="80px" style="text-align: center;">Oct</th>
-       <th width="80px" style="text-align: center;">Nov</th>
-       <th width="80px" style="text-align: center;">Dec</th>
-       <th width="80px" style="text-align: center;">Acc.</th>
-      </tr>
-     </thead>
      <tbody>
       <tr style="text-align: center;">
-       <td bgColor="#e0e0e0" rowspan="6" style="text-align: center; vertical-align: middle">Market</td>
-       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Field Rate">FFR </td>
-       <td>\''.$ly.'</td>';
-       $restam = 12;
-       foreach ($FFRly as $key) {
-         $htm = $htm.'<td class="ly">'.$key.'</td>';
-         $restam--;
-       }
+       <td rowspan="24" style="text-align: center; vertical-align: middle">Process Index</td>';
 
-       for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="ly"><b></td>'; 
-       }
-
-       $accly = acc1($FFRLY1,$FFRLY2);
-       $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
-       $htm = $htm.'
-      </tr>
-      <tr style="text-align: center;">
-       <td>\''.$Y.'</td>';
-
-       $restam = 12;
-       foreach ($FFRpy as $key) {
-         $htm = $htm.'<td class="py">'.$key.'</td>';
-         $restam--;
-       }
-
-       for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="py"><b></td>'; 
-       }
-       $accpy = acc1($FFRPY1,$FFRPY2);
-       $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
-       $htm = $htm.'
-       </tr>
-      <tr bgColor="#e0e0e0" style="text-align: center;">
-       <td bgColor="#e0e0e0">YOY</td>';
-      for ($i=0; $i < sizeof($FFRpy); $i++) {
-        $yoy = impr1($FFRly[$i],$FFRpy[$i]);
-        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
-      }
-
-      $restam = 12-sizeof($FFRpy);
-      for ($i=0; $i < $restam; $i++) {
-        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
-      }
-      $acc = impr1($accly,$accpy);
-
-      $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
-
-       $htm = $htm.'
-      </tr>
-      <tr style="text-align: center;" >
-       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Cost Rate">FCR </td>
-       <td>\''.$ly.'</td>';
-
-       $restam = 12;
-       foreach ($FCRly as $key) {
-         $htm = $htm.'<td class="ly">'.$key.'</td>';
-         $restam--;
-       }
-
-       for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="ly"><b></td>'; 
-       }
-        $accly = acc1($FCRLY1,$FCRLY2);
-        $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
-
-       $htm = $htm.'
-      </tr>
-      <tr style="text-align: center;">
-       <td>\''.$Y.'</td>';
-
-       $restam = 12;
-       foreach ($FCRpy as $key) {
-         $htm = $htm.'<td class="py">'.$key.'</td>';
-         $restam--;
-       }
-
-       for ($i=0; $i < $restam; $i++) { 
-        $htm = $htm.'<td class="py"><b></td>'; 
-       }
-        $accpy = acc1($FCRPY1,$FCRPY2);
-        $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
-
-       $htm = $htm.'
-       </tr>
-      <tr style="text-align: center;">
-       <td bgColor="#e0e0e0">YOY</td>';
-      for ($i=0; $i < sizeof($FCRpy); $i++) {
-        $yoy = impr1($FCRly[$i],$FCRpy[$i]);
-        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
-      }
-
-      $restam = 12-sizeof($FCRpy);
-      for ($i=0; $i < $restam; $i++) {
-        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
-      }
-
-        $acc = impr1($accly,$accpy);
-
-        $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
-
-
-       $htm = $htm.'
-      </tr>
-      <tr style="text-align: center;" >
-       <td bgColor="#e0e0e0" rowspan="9" style="text-align: center; vertical-align: middle">Production</td>
+      $htm = $htm.'
+       <td rowspan="6" style="text-align: center; vertical-align: middle">IQC</td>
        <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Parts Return Rate">PRR </td>
        <td>\''.$ly.'</td>';
 
@@ -1985,8 +1967,72 @@ class QhiboardController extends Controller
         $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
 
           $htm = $htm.'
+      </tr>';
+
+
+      $htm = $htm.'
+      <tr style="text-align: center;" >
+       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Lot Reject Rate">LRR </td>
+       <td>\''.$ly.'</td>';
+
+       $restam = 12;
+       foreach ($LRRly as $key) {
+
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+        $accly = acc1($LRRLY1,$LRRLY2);
+        $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
+        
+       $htm = $htm.'
       </tr>
       <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($LRRpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+        $accpy = acc1($LRRPY1,$LRRPY2);
+        $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
+
+        
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">YOY</td>';
+      for ($i=0; $i < sizeof($LRRpy); $i++) {
+        $yoy = impr1($LRRly[$i],$LRRpy[$i]);
+        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
+      }
+
+      $restam = 12-sizeof($LRRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
+      }
+
+        $acc = impr1($accly,$accpy);
+
+        $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
+
+          $htm = $htm.'
+      </tr>';
+
+
+      $htm = $htm.'
+      <tr style="text-align: center;">
+      <td rowspan="9" style="text-align: center; vertical-align: middle">LQC</td>
       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Total Line Defect Rate">TLDR </td>
        <td>\''.$ly.'</td>';
 
@@ -2040,7 +2086,9 @@ class QhiboardController extends Controller
         $acc = impr1($accly,$accpy);
         $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
        $htm = $htm.'
-      </tr>
+      </tr>';
+
+      $htm = $htm.'
       <tr style="text-align: center;">
       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Return Rate">IFRR </td>
        <td>\''.$ly.'</td>';
@@ -2097,7 +2145,356 @@ class QhiboardController extends Controller
         $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
 
        $htm = $htm.'
+      </tr>';
+
+             $htm = $htm.'
       </tr>
+      <tr style="text-align: center;">
+      <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Line Stop Number">Line Stop Qty</td>
+       <td>\''.$ly.'</td>';
+
+
+       $restam = 12;
+       foreach ($LINEly as $key) {
+
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+        $htm = $htm.'<td class="acc"><b>'.$LINELY1.'</td>';
+
+        
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($LINEpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+        $htm = $htm.'<td class="acc"><b>'.$LINEPY1.'</td>';
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">YOY</td>';
+      for ($i=0; $i < sizeof($LINEpy); $i++) {
+        $yoy = impr1($LINEly[$i],$LINEpy[$i]);
+        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
+      }
+
+      $restam = 12-sizeof($LINEpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
+      }
+
+        $acc = impr1($LINELY1,$LINEPY1);
+        $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
+
+       $htm = $htm.'
+      </tr>';
+
+      $htm = $htm.'
+      <tr style="text-align: center;">
+       <td rowspan="3" style="text-align: center; vertical-align: middle">OQC</td>
+      <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="OQC Defect Rate">NGC Sample Rate</td>
+       <td>\''.$ly.'</td>';
+
+
+        $restam = 12;
+        foreach ($OQCly as $key) {
+
+            $htm = $htm.'<td class="ly">'.$key.'</td>';
+            $restam--;
+        }
+
+        for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="ly"><b></td>'; 
+        }
+
+        $accly = acc2($OQCLY1,$OQCLY2);
+        $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($OQCpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+        $accpy = acc2($OQCPY1,$OQCPY2);
+        $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">YOY</td>';
+      for ($i=0; $i < sizeof($OQCpy); $i++) {
+        $yoy = impr1($OQCly[$i],$OQCpy[$i]);
+        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
+      }
+
+      $restam = 12-sizeof($OQCpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
+      }
+
+        $acc = impr1($accly,$accpy);
+        $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
+       $htm = $htm.'
+      </tr>';
+
+
+      $htm = $htm.'
+      <tr style="text-align: center;">
+      <td rowspan="3" style="text-align: center; vertical-align: middle">Common</td>
+      <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Temporary Workers Rate">OS</td>
+       <td>\''.$ly.'</td>';
+
+
+        $restam = 12;
+        foreach ($TEMPly as $key) {
+
+            $htm = $htm.'<td class="ly">'.$key.'</td>';
+            $restam--;
+        }
+
+        for ($i=0; $i < $restam; $i++) { 
+            $htm = $htm.'<td class="ly"><b></td>'; 
+        }
+
+        $accly = acc1($TEMPLY1,$TEMPLY2);
+        $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($TEMPpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+        $accpy = acc2($TEMPPY1,$TEMPPY2);
+        $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">YOY</td>';
+      for ($i=0; $i < sizeof($TEMPpy); $i++) {
+        $yoy = impr1($TEMPly[$i],$TEMPpy[$i]);
+        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
+      }
+
+      $restam = 12-sizeof($TEMPpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
+      }
+
+        $acc = impr1($accly,$accpy);
+        $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
+       $htm = $htm.'
+      </tr>';
+
+
+      $htm = $htm.'
+      <tr style="text-align: center;" >
+       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Cost">IF Cost</td>
+       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Intern Failure Cost">IF Cost ($)</td>
+       <td>\''.$ly.'</td>';
+
+       $restam = 12;
+       foreach ($IFCly as $key) {
+
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+        $htm = $htm.'<td class="acc"><b>'.$IFCLY1.'</td>';
+        
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($IFCpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+
+        $htm = $htm.'<td class="acc"><b>'.$IFCPY1.'</td>';
+
+        
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">YOY</td>';
+      for ($i=0; $i < sizeof($IFCpy); $i++) {
+        $yoy = impr1($IFCly[$i],$IFCpy[$i]);
+        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
+      }
+
+      $restam = 12-sizeof($IFCpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
+      }
+
+        $acc = impr1($accly,$accpy);
+
+        $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
+
+          $htm = $htm.'
+      </tr>';
+
+       $htm = $htm.'
+      <tr style="text-align: center;">
+       <td rowspan="6" style="text-align: center; vertical-align: middle">Target Index</td>
+       <td rowspan="3" style="text-align: center; vertical-align: middle">Market</td>
+       <td bgColor="#e0e0e0" rowspan="3" style="text-align: center; vertical-align: middle" title="Failure Field Rate">FFR </td>
+       <td>\''.$ly.'</td>';
+       $restam = 12;
+       foreach ($FFRly as $key) {
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+
+       $accly = acc1($FFRLY1,$FFRLY2);
+       $htm = $htm.'<td class="acc"><b>'.$accly.'</td>';
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;">
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($FFRpy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+       $accpy = acc1($FFRPY1,$FFRPY2);
+       $htm = $htm.'<td class="acc"><b>'.$accpy.'</td>';
+       $htm = $htm.'
+       </tr>
+      <tr bgColor="#e0e0e0" style="text-align: center;">
+       <td bgColor="#e0e0e0">YOY</td>';
+      for ($i=0; $i < sizeof($FFRpy); $i++) {
+        $yoy = impr1($FFRly[$i],$FFRpy[$i]);
+        $htm = $htm.'<td bgColor="#e0e0e0" '.$yoy.'</td>';
+      }
+
+      $restam = 12-sizeof($FFRpy);
+      for ($i=0; $i < $restam; $i++) {
+        $htm = $htm.'<td bgColor="#e0e0e0" class="impr"></td>';
+      }
+      $acc = impr1($accly,$accpy);
+
+      $htm = $htm.'<td class="acc" bgColor = "#e0e0e0" '.$acc.'</td>';
+
+       $htm = $htm.'
+      </tr>
+      <tr style="text-align: center;" >
+       <td rowspan="3" style="text-align: center; vertical-align: middle" title="Quality Issue">Quality Issue</td>
+       <td bgColor="#e0e0e0" style="text-align: center; vertical-align: middle">Rework Field</td>
+       <td>\''.$Y.'</td>
+       ';
+
+       $restam = 12;
+       foreach ($REWFpy as $key) {
+         $htm = $htm.'<td class="ly">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="ly"><b></td>'; 
+       }
+        $htm = $htm.'<td class="acc"><b>'.$rewfpy1.'</td>';
+
+       $htm = $htm.'
+      </tr>';
+
+      $htm = $htm.'
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">CEO Report</td>
+       <td>\''.$Y.'</td>';
+
+       $restam = 12;
+       foreach ($CeoReppy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+        $htm = $htm.'<td class="acc"><b>'.$ceorepPY1.'</td>';
+
+       $htm = $htm.'
+       </tr>
+      <tr style="text-align: center;">
+       <td bgColor="#e0e0e0">Sales IQC</td>
+       <td>\''.$Y.'</td>';
+       $restam = 12;
+       foreach ($CeoReppy as $key) {
+         $htm = $htm.'<td class="py">'.$key.'</td>';
+         $restam--;
+       }
+
+       for ($i=0; $i < $restam; $i++) { 
+        $htm = $htm.'<td class="py"><b></td>'; 
+       }
+        $htm = $htm.'<td class="acc"><b>'.$ceorepPY1.'</td>';
+
+
+
+
+       $htm = $htm.'
+      </tr>';
+
+
+
+      $htm = $htm.'
      </tbody>
     </table>';
     return $htm;
